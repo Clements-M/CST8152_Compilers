@@ -3,3 +3,6 @@
 /obj/Debug/bitmask.o
 /obj/Debug/buffer.o
 /obj/Debug/fileio.o
+/obj/Debug/parser.o
+/obj/Debug/scanner.o
+/obj/Debug/stable.o
