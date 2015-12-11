@@ -266,7 +266,7 @@ void gen_incode(char* incode){
  **********************************************************************/
 
  /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing program
  * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
  * Called functions:    none
@@ -328,7 +328,7 @@ void program(void) {
  *                      production it implements and the FIRST set for that production (see above).
  **********************************************************************/
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing opt_statements
  * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
  * Called functions:    none
@@ -363,7 +363,7 @@ void opt_statements() {
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing statements
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -376,15 +376,16 @@ void opt_statements() {
  **********************************************************************/
 void statements(void) {
 
+    statement();
+    statement_prime();
 
-
-    gen_incode("PLATY: statements parsed");
+    gen_incode("PLATY: Statements parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing statement prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -401,13 +402,13 @@ void statement_prime(void) {
 
 
 
-    gen_incode("PLATY: statement_prime parsed");
+    gen_incode("PLATY: Statement prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing statement
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -423,13 +424,13 @@ void statement(void) {
 
 
 
-    gen_incode("PLATY: statement parsed");
+    gen_incode("PLATY: Statement parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing assignment statement
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -442,15 +443,16 @@ void statement(void) {
  **********************************************************************/
 void assignment_statement(void) {
 
+    assignment_expression();
+    match(EOS_T, NO_ATTR);
 
-
-    gen_incode("PLATY: assignment_statement parsed");
+    gen_incode("PLATY: Assignment statement parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing assignment expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -465,13 +467,13 @@ void assignment_expression(void) {
 
 
 
-    gen_incode("PLATY: assignment_expression parsed");
+    gen_incode("PLATY: Assignment expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing selection statement
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -485,15 +487,25 @@ void assignment_expression(void) {
  **********************************************************************/
 void selection_statement(void) {
 
+    match(KW_T, IF);
+    match(LPR_T, NO_ATTR);
+    conditional_expression();
+    match(RPR_T, NO_ATTR);
+    match(KW_T, THEN);
+    opt_statements();
+    match(KW_T, ELSE);
+    match(LBR_T, NO_ATTR);
+    opt_statements();
+    match(RBR_T, NO_ATTR);
+    match(EOS_T, NO_ATTR);
 
-
-    gen_incode("PLATY: selection_statement parsed");
+    gen_incode("PLATY: Selection statement parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing iteration statement
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -507,9 +519,21 @@ void selection_statement(void) {
  **********************************************************************/
 void iteration_statement(void) {
 
+    match(KW_T, USING);
+    match(LPR_T, NO_ATTR);
+    assignment_expression();
+    match(COM_T, NO_ATTR);
+    conditional_expression();
+    match(COM_T, NO_ATTR);
+    assignment_expression();
+    match(RPR_T, NO_ATTR);
+    match(KW_T, REPEAT);
+    match(LBR_T, NO_ATTR);
+    opt_statements();
+    match(RBR_T, NO_ATTR);
+    match(EOS_T, NO_ATTR);
 
-
-    gen_incode("PLATY: iteration_statement parsed");
+    gen_incode("PLATY: Iteration statement parsed");
 
 }
 
@@ -555,9 +579,8 @@ void iteration_statement(void) {
  *                      from calling the error handler at the right place.
  **********************************************************************/
 /***********************************************************************
- * Purpose:
- * Author:              Cory Hilliard    040 630 141
- *                      Matthew Clements 040 766 220
+ * Purpose:             for parsing input statement
+ * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
  * Called functions:    none
  * Parameters:          none
@@ -573,13 +596,14 @@ void input_statement(void) {
     variable_list();
     match(RPR_T,NO_ATTR);
     match(EOS_T,NO_ATTR);
+
     gen_incode("PLATY: Input statement parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing variable list
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -592,15 +616,16 @@ void input_statement(void) {
  **********************************************************************/
 void variable_list(void) {
 
+    variable_identifier();
+    variable_list_prime();
 
-
-    gen_incode("PLATY: variable_list parsed");
+    gen_incode("PLATY: Variable list parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing variable list prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -615,13 +640,13 @@ void variable_list_prime(void) {
 
 
 
-    gen_incode("PLATY: variable_list_prime parsed");
+    gen_incode("PLATY: Variable list prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing output statement
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -634,15 +659,19 @@ void variable_list_prime(void) {
  **********************************************************************/
 void output_statement(void) {
 
+    match(KW_T, OUTPUT);
+    match(LPR_T, NO_ATTR);
+    output_list();
+    match(RPR_T, NO_ATTR);
+    match(EOS_T, NO_ATTR);
 
-
-    gen_incode("PLATY: output_statement parsed");
+    gen_incode("PLATY: Output statement parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing output list
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -657,13 +686,13 @@ void output_list(void) {
 
 
 
-    gen_incode("PLATY: output_list parsed");
+    gen_incode("PLATY: Output list parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing optional variable list
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -678,13 +707,13 @@ void optional_variable_list(void) {
 
 
 
-    gen_incode("PLATY: optional_variable_list parsed");
+    gen_incode("PLATY: Optional variable list parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing arithmetic expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -699,13 +728,13 @@ void arithmetic_expression(void) {
 
 
 
-    gen_incode("PLATY: arithmetic_expression parsed");
+    gen_incode("PLATY: Arithmetic expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing unary arithmetic expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -720,13 +749,13 @@ void unary_arithmetic_expression(void) {
 
 
 
-    gen_incode("PLATY: unary_arithmetic_expression parsed");
+    gen_incode("PLATY: Unary arithmetic expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing additive arithmetic expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -741,13 +770,13 @@ void additive_arithmetic_expression(void) {
 
 
 
-    gen_incode("PLATY: additive_arithmetic_expression parsed");
+    gen_incode("PLATY: Additive arithmetic expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing additive arithmetic expression prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -764,13 +793,13 @@ void additive_arithmetic_expression_prime(void) {
 
 
 
-    gen_incode("PLATY: additive_arithmetic_expression_prime parsed");
+    gen_incode("PLATY: Additive arithmetic expression prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing multiplicative arithmetic expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -783,15 +812,16 @@ void additive_arithmetic_expression_prime(void) {
  **********************************************************************/
 void multiplicative_arithmetic_expression(void) {
 
+    primary_arithmetic_expression();
+    multiplicative_arithmetic_expression_prime();
 
-
-    gen_incode("PLATY: multiplicative_arithmetic_expression parsed");
+    gen_incode("PLATY: Multiplicative arithmetic expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing multiplicative arithmetic expression_prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -808,13 +838,13 @@ void multiplicative_arithmetic_expression_prime(void) {
 
 
 
-    gen_incode("PLATY: multiplicative_arithmetic_expression_prime parsed");
+    gen_incode("PLATY: Multiplicative arithmetic expression prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary arithmetic expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -829,13 +859,13 @@ void primary_arithmetic_expression(void) {
 
 
 
-    gen_incode("PLATY: primary_arithmetic_expression parsed");
+    gen_incode("PLATY: Primary arithmetic expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing string expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -848,15 +878,16 @@ void primary_arithmetic_expression(void) {
  **********************************************************************/
 void string_expression(void) {
 
+    primary_string_expression();
+    string_expression_prime();
 
-
-    gen_incode("PLATY: string_expression parsed");
+    gen_incode("PLATY: String expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing string expression prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -871,13 +902,13 @@ void string_expression_prime(void) {
 
 
 
-    gen_incode("PLATY: string_expression_prime parsed");
+    gen_incode("PLATY: String expression prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary string expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -892,13 +923,13 @@ void primary_string_expression(void) {
 
 
 
-    gen_incode("PLATY: primary_string_expression parsed");
+    gen_incode("PLATY: Primary string expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing conditional expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -911,15 +942,15 @@ void primary_string_expression(void) {
  **********************************************************************/
 void conditional_expression(void) {
 
+    logical_OR_expression();
 
-
-    gen_incode("PLATY: conditional_expression parsed");
+    gen_incode("PLATY: Conditional expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing logical OR expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -932,15 +963,16 @@ void conditional_expression(void) {
  **********************************************************************/
 void logical_OR_expression(void) {
 
+    logical_AND_expression();
+    logical_OR_expression_prime();
 
-
-    gen_incode("PLATY: logical_OR_expression parsed");
+    gen_incode("PLATY: Logical OR expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing logical OR expression prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -955,13 +987,13 @@ void logical_OR_expression_prime(void) {
 
 
 
-    gen_incode("PLATY: logical_OR_expression_prime parsed");
+    gen_incode("PLATY: Logical OR expression prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing logical AND expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -974,15 +1006,16 @@ void logical_OR_expression_prime(void) {
  **********************************************************************/
 void logical_AND_expression(void) {
 
+    relational_expression();
+    logical_AND_expression_prime();
 
-
-    gen_incode("PLATY: logical_AND_expression parsed");
+    gen_incode("PLATY: Logical AND expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing logical AND expression prime
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -997,13 +1030,13 @@ void logical_AND_expression_prime(void) {
 
 
 
-    gen_incode("PLATY: logical_AND_expression_prime parsed");
+    gen_incode("PLATY: Logical AND expression prime parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing relational expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -1019,13 +1052,13 @@ void relational_expression(void) {
 
 
 
-    gen_incode("PLATY: relational_expression parsed");
+    gen_incode("PLATY: Relational expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary a relational expression list
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -1043,13 +1076,13 @@ void primary_a_relational_expression_list(void) {
 
 
 
-    gen_incode("PLATY: primary_a_relational_expression_list parsed");
+    gen_incode("PLATY: Primary a relational expression list parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary s relational expression list
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -1067,13 +1100,13 @@ void primary_s_relational_expression_list(void) {
 
 
 
-    gen_incode("PLATY: primary_s_relational_expression_list parsed");
+    gen_incode("PLATY: Primary s relational expression list parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary a relational expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -1088,13 +1121,13 @@ void primary_a_relational_expression(void) {
 
 
 
-    gen_incode("PLATY: primary_a_relational_expression parsed");
+    gen_incode("PLATY: Primary a relational expression parsed");
 
 }
 
 
 /***********************************************************************
- * Purpose:
+ * Purpose:             for parsing primary s relational expression
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
@@ -1109,7 +1142,7 @@ void primary_s_relational_expression(void) {
 
 
 
-    gen_incode("PLATY: primary_s_relational_expression parsed");
+    gen_incode("PLATY: Primary s relational expression parsed");
 
 }
 

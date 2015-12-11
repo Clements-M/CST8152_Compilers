@@ -73,6 +73,7 @@
 
 /* extern definitions */
 extern Token mlwpar_next_token(Buffer* sc_buf);
+extern STD sym_table;
 
 /* function prototypes */
 void parser(Buffer* in_buf);                            /* creates a Buffer structure and sets values with given parameters */
