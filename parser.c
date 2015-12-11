@@ -67,9 +67,9 @@
 */
 
 /* global variables */
-static  Token lookahead;        /* look ahead token to match with ... */
-static  Buffer *sc_buf;         /* a pointer to a buffer for the source file */
-int     synerrno;               /* for error counting */
+static Token lookahead;        /* look ahead token to match with ... */
+static Buffer* sc_buf;         /* a pointer to a buffer for the source file */
+int    synerrno;               /* for error counting */
 
 
 /***********************************************************************
@@ -91,7 +91,8 @@ void parser(Buffer* in_buf) {
 
     sc_buf = in_buf;
     lookahead = mlwpar_next_token(sc_buf);
-    program(); match(SEOF_T,NO_ATTR);
+    program();
+    match(SEOF_T,NO_ATTR);
     gen_incode("PLATY: Source file parsed");
 
 }
@@ -235,62 +236,6 @@ void gen_incode(char* incode){
 }
 
 
-
-/***********************************************************************
- * Purpose:             assignment the function takes a string as an argument and prints it
- * Author:
- * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
- * Return value:        pointer to Buffer
- * Algorithm:           Step 7.1:
- *                      To implement the Parser, you must use the modified grammar (see Task 1). Before
- *                      writing a function, analyze carefully the production. If the production consists of a single
- *                      production rule (no alternatives), write the corresponding function without using the
- *                      FIRST set (see above). You can use the lookahead to verify in advance whether to
- *                      proceed with the production or to call syn_printe() function. If you do so, your output
- *                      might report quite different syntax errors than my parser will reports.
- *                      CST8152 – Compilers – Assignment 4, F15
- *                      Example: The production:
- *                      <input statement> ->
- *                          INPUT (<variable list>);
-
- *                      MUST be implemented as follows:
-
- *                      void input_statement(void){
- *                          match(KW_T,INPUT);
-                            match(LPR_T,NO_ATTR);
-                            variable_list();
- *                          match(RPR_T,NO_ATTR);
-                            match(EOS_T,NO_ATTR);
- *                          gen_incode("PLATY: Input statement parsed");
- *                      }
-
- *                      AND MUST NOT be implemented as shown below:
-
- *                      void input_statement(void){
- *                          if(lookahead.code == KW_T
- *                          && lookahead. attribute. get_int== INPUT) {
- *                          match(KW_T,INPUT);
-                            match(LPR_T,NO_ATTR);
-                            variable_list();
- *                          match(RPR_T,NO_ATTR);
-                            match(EOS_T,NO_ATTR);
- *                          gen_incode("PLATY: Input statement parsed");
- *                      }else
- *                          syn_printe();
- *                      }
- *                      This implementation will “catch” the syntax error but will prevent the match() function
- *                      from calling the error handler at the right place.
- **********************************************************************/
-
-
-
 /***********************************************************************
  * Purpose:             assignment the function takes a string as an argument and prints it
  * Author:              King Svillen Ranev of the round table
@@ -338,10 +283,48 @@ void program(void) {
 
 
 
+
+/***********************************************************************
+ * Purpose:             assignment the function takes a string as an argument and prints it
+ * Algorithm:           Step 7.2:
+ *                      If a production has more than one alternatives on the right side (even if one of them is
+ *                      empty), you must use the FIRST set for the production.
+ *                      For example, the FIRST set for the <opt_statements> production is: { KW_T (but not
+ *                      PLATYPUS, ELSE, THEN, REPEAT), AVID_T, SVID_T, and .
+ *                      Here is an example how the FIRST set is used to write a function for a production:
+ *                      void opt_statements(){
+ *                          FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e}
+ *
+ *                          switch(lookahead.code){
+ *                              case AVID_T:
+ *                              case SVID_T: statements();break;
+ *                              case KW_T:
+ *                                  check for PLATYPUS, ELSE, THEN, REPEAT here and in statements_p()
+ *                          if (lookahead. attribute. get_int != PLATYPUS
+ *                              && lookahead. attribute. get_int != ELSE
+ *                              && lookahead. attribute. get_int != THEN
+ *                              && lookahead. attribute. get_int != REPEAT){
+ *                                  statements();
+ *                                  break;
+ *                          }
+ *
+ *                              default: empty string – optional statements ;
+ *                              gen_incode("PLATY: Opt_statements parsed");
+ *                          }
+ *                      }
+ *
+ *                      Pay special attention to the implementation of the empty string. If you do not have an
+ *                      empty string in your production, you must call the syn_printe() function at that point .
+ *                      IMPORTANT NOTE: You are not allowed to call the error handling function syn_eh()
+ *                      inside the production functions and you are not allowed to advance the lookahead
+ *                      within the production functions as well. Only match() can call syn_eh(), and only
+ *                      match() and syn_eh() can advance lookahead.
+ *                      ANOTHER NOTE: Each function must contain a line in its header indicating the
+ *                      production it implements and the FIRST set for that production (see above).
+ **********************************************************************/
 /***********************************************************************
  * Purpose:
- * Author:              Cory Hilliard    040 630 141
- *                      Matthew Clements 040 766 220
+ * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
  * Called functions:    none
  * Parameters:          none
@@ -351,12 +334,25 @@ void program(void) {
  *                          <statements> | ϵ
  *                      FIRST(<opt_statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ}
  **********************************************************************/
-void opt_statements(void) {
-
+void opt_statements() {
+    /* FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e} */
     switch(lookahead.code) {
-        case
-
-
+        case AVID_T:
+        case SVID_T:
+            statements();
+            break;
+        case KW_T:
+            /* check for PLATYPUS, ELSE, THEN, REPEAT here and in statements_p() */
+            if (lookahead. attribute. get_int != PLATYPUS
+                    && lookahead. attribute. get_int != ELSE
+                    && lookahead. attribute. get_int != THEN
+                    && lookahead. attribute. get_int != REPEAT) {
+                statements();
+                break;
+            }
+        default: /*empty string – optional statements*/
+            ;
+            gen_incode("PLATY: Opt_statements parsed");
     }
 
 }
@@ -504,7 +500,47 @@ void iteration_statement(void) {
 
 }
 
-
+/***********************************************************************
+ * Algorithm:           Step 7.1:
+ *                      To implement the Parser, you must use the modified grammar (see Task 1). Before
+ *                      writing a function, analyze carefully the production. If the production consists of a single
+ *                      production rule (no alternatives), write the corresponding function without using the
+ *                      FIRST set (see above). You can use the lookahead to verify in advance whether to
+ *                      proceed with the production or to call syn_printe() function. If you do so, your output
+ *                      might report quite different syntax errors than my parser will reports.
+ *                      CST8152 – Compilers – Assignment 4, F15
+ *                      Example: The production:
+ *                      <input statement> ->
+ *                          INPUT (<variable list>);
+ *
+ *                      MUST be implemented as follows:
+ *
+ *                      void input_statement(void){
+ *                          match(KW_T,INPUT);
+ *                          match(LPR_T,NO_ATTR);
+ *                          variable_list();
+ *                          match(RPR_T,NO_ATTR);
+ *                          match(EOS_T,NO_ATTR);
+ *                          gen_incode("PLATY: Input statement parsed");
+ *                      }
+ *
+ *                      AND MUST NOT be implemented as shown below:
+ *
+ *                      void input_statement(void){
+ *                          if(lookahead.code == KW_T
+ *                          && lookahead. attribute. get_int== INPUT) {
+ *                          match(KW_T,INPUT);
+ *                          match(LPR_T,NO_ATTR);
+ *                          variable_list();
+ *                          match(RPR_T,NO_ATTR);
+ *                          match(EOS_T,NO_ATTR);
+ *                          gen_incode("PLATY: Input statement parsed");
+ *                      }else
+ *                          syn_printe();
+ *                      }
+ *                      This implementation will “catch” the syntax error but will prevent the match() function
+ *                      from calling the error handler at the right place.
+ **********************************************************************/
 /***********************************************************************
  * Purpose:
  * Author:              Cory Hilliard    040 630 141
@@ -1040,122 +1076,6 @@ void primary_s_relational_expression(void) {
 
 }
 
-
-/***********************************************************************
- * Purpose:             assignment the function takes a string as an argument and prints it
- * Author:
- * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
- * Return value:        pointer to Buffer
- * Algorithm:           Step 7.1:
- *                      To implement the Parser, you must use the modified grammar (see Task 1). Before
- *                      writing a function, analyze carefully the production. If the production consists of a single
- *                      production rule (no alternatives), write the corresponding function without using the
- *                      FIRST set (see above). You can use the lookahead to verify in advance whether to
- *                      proceed with the production or to call syn_printe() function. If you do so, your output
- *                      might report quite different syntax errors than my parser will reports.
- *                      CST8152 – Compilers – Assignment 4, F15
- *                      Example: The production:
- *                      <input statement> ->
- *                      INPUT (<variable list>);
- *                      MUST be implemented as follows:
- *                      void input_statement(void){
- *                      match(KW_T,INPUT);match(LPR_T,NO_ATTR);variable_list();
- *                      match(RPR_T,NO_ATTR); match(EOS_T,NO_ATTR);
- *                      gen_incode("PLATY: Input statement parsed");
- *                      }
- *                      AND MUST NOT be implemented as shown below:
- *                      void input_statement(void){
- *                      if(lookahead.code == KW_T
- *                      && lookahead. attribute. get_int== INPUT) {
- *                      match(KW_T,INPUT);match(LPR_T,NO_ATTR);variable_list();
- *                      match(RPR_T,NO_ATTR); match(EOS_T,NO_ATTR);
- *                      gen_incode("PLATY: Input statement parsed");
- *                      }else
- *                      syn_printe();
- *                      }
- *                      This implementation will “catch” the syntax error but will prevent the match() function
- *                      from calling the error handler at the right place.
- **********************************************************************/
-
-
-
-
-
-/***********************************************************************
- * Purpose:             assignment the function takes a string as an argument and prints it
- * Author:
- * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
- * Return value:        pointer to Buffer
- * Algorithm:           Step 7.2:
- *                      If a production has more than one alternatives on the right side (even if one of them is
- *                      empty), you must use the FIRST set for the production.
- *                      For example, the FIRST set for the <opt_statements> production is: { KW_T (but not
- *                      PLATYPUS, ELSE, THEN, REPEAT), AVID_T, SVID_T, and .
- *                      Here is an example how the FIRST set is used to write a function for a production:
- *                      void opt_statements(){
- *                      FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e}
- *                      switch(lookahead.code){
- *                      case AVID_T:
- *                      case SVID_T: statements();break;
- *                      case KW_T:
- *                      check for PLATYPUS, ELSE, THEN, REPEAT here and in
- *                      statements_p()
- *                      if (lookahead. attribute. get_int != PLATYPUS
- *                      && lookahead. attribute. get_int != ELSE
- *                      && lookahead. attribute. get_int != THEN
- *                      && lookahead. attribute. get_int != REPEAT){
- *                      statements();
- *                      break;
- *                      }
- *                      default: empty string – optional statements ;
- *                      gen_incode("PLATY: Opt_statements parsed");
- *                      }
- *                      }
- *
- *                      Pay special attention to the implementation of the empty string. If you do not have an
- *                      empty string in your production, you must call the syn_printe() function at that point .
- *                      IMPORTANT NOTE: You are not allowed to call the error handling function syn_eh()
- *                      inside the production functions and you are not allowed to advance the lookahead
- *                      within the production functions as well. Only match() can call syn_eh(), and only
- *                      match() and syn_eh() can advance lookahead.
- *                      ANOTHER NOTE: Each function must contain a line in its header indicating the
- *                      production it implements and the FIRST set for that production (see above).
- **********************************************************************/
-void opt_statements() {
-    /* FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e} */
-    switch(lookahead.code) {
-        case AVID_T:
-        case SVID_T:
-            statements();
-            break;
-        case KW_T:
-            /* check for PLATYPUS, ELSE, THEN, REPEAT here and in statements_p() */
-            if (lookahead. attribute. get_int != PLATYPUS
-                    && lookahead. attribute. get_int != ELSE
-                    && lookahead. attribute. get_int != THEN
-                    && lookahead. attribute. get_int != REPEAT) {
-                statements();
-                break;
-            }
-        default: /*empty string – optional statements*/
-            ;
-            gen_incode("PLATY: Opt_statements parsed");
-    }
-}
 
 /*
 Step 8:

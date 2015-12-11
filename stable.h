@@ -10,8 +10,8 @@
  * Professor:       Svillen Ranev
  * Purpose:         Implementing and Incorporating a Symbol Table
  **********************************************************************/
-#ifndef STABLE_H
-#define STABLE_H
+#ifndef STABLE_H_
+#define STABLE_H_
 
 #include "buffer.h"
 

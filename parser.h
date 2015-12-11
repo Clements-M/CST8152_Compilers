@@ -51,8 +51,8 @@
  *                  primary_a_relational_expression();
  *                  primary_s_relational_expression();
  **********************************************************************/
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSER_H_
+#define PARSER_H_
 
 /* header includes */
 #include "buffer.h"         /* comments */
@@ -71,8 +71,11 @@
 #define USING       7       /* comments */
 #define NO_ATTR     0       /* comments */
 
+/* extern definitions */
+extern Token mlwpar_next_token(Buffer* sc_buf);
+
 /* function prototypes */
-void parser(Buffer * in_buf);                           /* creates a Buffer structure and sets values with given parameters */
+void parser(Buffer* in_buf);                            /* creates a Buffer structure and sets values with given parameters */
 void match(int pr_token_code,int pr_token_attribute);   /* matches the current input token (lookahead) and the token required by the parser */
 void syn_eh(int sync_token_code);                       /* implements a simple panic mode error recovery */
 void syn_printe();                                      /* prints error messages */
@@ -106,10 +109,10 @@ void conditional_expression(void);                      /* comments */
 void logical_OR_expression(void);                       /* comments */
 void logical_OR_expression_prime(void);                 /* comments */
 void logical_AND_expression(void);                      /* comments */
-void logical_AND_expression(void);                      /* comments */
+void logical_AND_expression_prime(void);                /* comments */
 void relational_expression(void);                       /* comments */
-void primary_a_relational_expression(void);             /* comments */
-void primary_s_relational_expression(void);             /* comments */
+void primary_a_relational_expression_list(void);        /* comments */
+void primary_s_relational_expression_list(void);        /* comments */
 void primary_a_relational_expression(void);             /* comments */
 void primary_s_relational_expression(void);             /* comments */
 
