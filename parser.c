@@ -135,6 +135,8 @@ void parser(Buffer* in_buf) {
 void match(int pr_token_code,int pr_token_attribute) {
 
 
+
+
 }
 
 
@@ -151,7 +153,7 @@ void match(int pr_token_code,int pr_token_attribute) {
  *                      o_mode:         char    (f, a, m)
  * Return value:        pointer to Buffer
  * Algorithm:           Step 4:
- *                      First, the function calls syn_printe() and increments the error counter. Then the
+ * First set:           FIRST, the function calls syn_printe() and increments the error counter. Then the
  *                      function implements a panic mode error recovery: the function advances the input token
  *                      (lookahead) until it finds a token code matching the one required by the parser
  *                      (pr_token_code passed to the function as sync_token_code ).
@@ -165,6 +167,8 @@ void match(int pr_token_code,int pr_token_attribute) {
  *                      the matching token is SEOF_T, the function returns.
  **********************************************************************/
 void syn_eh(int sync_token_code) {
+
+
 
 
 }
@@ -207,6 +211,8 @@ void syn_eh(int sync_token_code) {
  *                      names or the sting literals.
  **********************************************************************/
 void syn_printe() {
+
+
 
 
 }
@@ -266,10 +272,9 @@ void gen_incode(char* incode){
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <program> ->
+ * Production:          <program> ->
  *                          PLATYPUS { <opt_statements> } SEOF
- *                      FIRST(<program>) = {PLATYPUS}
+ * First set:           FIRST(<program>) = {PLATYPUS}
  **********************************************************************/
 void program(void) {
 
@@ -290,10 +295,10 @@ void program(void) {
  *                      If a production has more than one alternatives on the right side (even if one of them is
  *                      empty), you must use the FIRST set for the production.
  *                      For example, the FIRST set for the <opt_statements> production is: { KW_T (but not
- *                      PLATYPUS, ELSE, THEN, REPEAT), AVID_T, SVID_T, and .
+ *                      PLATYPUS, ELSE, THEN, REPEAT), AVID_T, SVID_T, and ϵ.
  *                      Here is an example how the FIRST set is used to write a function for a production:
  *                      void opt_statements(){
- *                          FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e}
+ *                          FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),ϵ}
  *
  *                          switch(lookahead.code){
  *                              case AVID_T:
@@ -329,10 +334,9 @@ void program(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <opt_statements> ->
+ * Production:          <opt_statements> ->
  *                          <statements> | ϵ
- *                      FIRST(<opt_statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ}
+ * First set:           FIRST(<opt_statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ}
  **********************************************************************/
 void opt_statements() {
     /* FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),e} */
@@ -366,15 +370,16 @@ void opt_statements() {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <statements> ->
+ * Production:          <statements> ->
  *                          <statement> <statement_prime>
- *                      FIRST(<statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
+ * First set:           FIRST(<statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
  **********************************************************************/
 void statements(void) {
 
 
 
+    gen_incode("PLATY: statements parsed");
+
 }
 
 
@@ -386,15 +391,18 @@ void statements(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <statement_prime> ->
+ * Production:          <statement_prime> ->
  *                          <statement> <statement_prime> | ϵ
- *                      FIRST(<statement_prime>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ}
+ * First set:           FIRST(<statement_prime>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ    gen_incode("PLATY:  parsed");
+
+}
  **********************************************************************/
 void statement_prime(void) {
 
 
 
+    gen_incode("PLATY: statement_prime parsed");
+
 }
 
 
@@ -406,16 +414,17 @@ void statement_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <statement> ->
+ * Production:          <statement> ->
  *                          <assignment_statement> | <selection_statement> | <iteration_statement> |
  *                          <input_statement> | <output_statement>
- *                      FIRST(<statement>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
+ * First set:           FIRST(<statement>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
  **********************************************************************/
 void statement(void) {
 
 
 
+    gen_incode("PLATY: statement parsed");
+
 }
 
 
@@ -427,15 +436,16 @@ void statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <assignment_statement> ->
+ * Production:          <assignment_statement> ->
  *                          <assignment_expression>;
- *                      FIRST(<assignment_statement>) = {AVID_T, SVID_T}
+ * First set:           FIRST(<assignment_statement>) = {AVID_T, SVID_T}
  **********************************************************************/
 void assignment_statement(void) {
 
 
 
+    gen_incode("PLATY: assignment_statement parsed");
+
 }
 
 
@@ -447,15 +457,16 @@ void assignment_statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <assignment_expression> ->
+ * Production:          <assignment_expression> ->
  *                          AVID_T = <arithmetic_expression> | SVID_T = <string_expression>
- *                      FIRST(<assignment_expression>) = {AVID_T, SVID_T}
+ * First set:           FIRST(<assignment_expression>) = {AVID_T, SVID_T}
  **********************************************************************/
 void assignment_expression(void) {
 
 
 
+    gen_incode("PLATY: assignment_expression parsed");
+
 }
 
 
@@ -467,16 +478,17 @@ void assignment_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <selection_statement> ->
+ * Production:          <selection_statement> ->
  *                      	IF ( <conditional_expression> ) THEN <opt_statements>
  *                      	ELSE { <opt_statements> };
- *                      FIRST(<selection_statement>) = {IF}
+ * First set:           FIRST(<selection_statement>) = {IF}
  **********************************************************************/
 void selection_statement(void) {
 
 
 
+    gen_incode("PLATY: selection_statement parsed");
+
 }
 
 
@@ -488,15 +500,16 @@ void selection_statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <iteration_statement> ->
+ * Production:          <iteration_statement> ->
  *                      	USING ( <assignment_expression>, <conditional_expression>,
  *                      	<assignment_expression> ) REPEAT { <opt_statements> };
- *                      FIRST(<iteration_statement>) = {USING}
+ * First set:           FIRST(<iteration_statement>) = {USING}
  **********************************************************************/
 void iteration_statement(void) {
 
 
+
+    gen_incode("PLATY: iteration_statement parsed");
 
 }
 
@@ -505,7 +518,7 @@ void iteration_statement(void) {
  *                      To implement the Parser, you must use the modified grammar (see Task 1). Before
  *                      writing a function, analyze carefully the production. If the production consists of a single
  *                      production rule (no alternatives), write the corresponding function without using the
- *                      FIRST set (see above). You can use the lookahead to verify in advance whether to
+ * First set:           FIRST set (see above). You can use the lookahead to verify in advance whether to
  *                      proceed with the production or to call syn_printe() function. If you do so, your output
  *                      might report quite different syntax errors than my parser will reports.
  *                      CST8152 – Compilers – Assignment 4, F15
@@ -549,10 +562,9 @@ void iteration_statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <input_statement> ->
+ * Production:          <input_statement> ->
  *  	                    INPUT ( <variable_list> );
- *                      FIRST(<input_statement>) = {INPUT}
+ * First set:           FIRST(<input_statement>) = {INPUT}
  **********************************************************************/
 void input_statement(void) {
 
@@ -574,15 +586,16 @@ void input_statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <variable_list> ->
+ * Production:          <variable_list> ->
  *                      	<variable_identifier> <variable_list_prime>
- *                      FIRST(<variable_list>) = {AVID_T, SVID_T}
+ * First set:           FIRST(<variable_list>) = {AVID_T, SVID_T}
  **********************************************************************/
 void variable_list(void) {
 
 
 
+    gen_incode("PLATY: variable_list parsed");
+
 }
 
 
@@ -594,15 +607,16 @@ void variable_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <variable_list_prime> ->
+ * Production:          <variable_list_prime> ->
  *                      	,<variable_list> <variable_list_prime> | ϵ
- *                      FIRST(<variable_list_prime>) = {, ϵ}
+ * First set:           FIRST(<variable_list_prime>) = {, ϵ}
  **********************************************************************/
 void variable_list_prime(void) {
 
 
 
+    gen_incode("PLATY: variable_list_prime parsed");
+
 }
 
 
@@ -614,15 +628,16 @@ void variable_list_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <output_statement> ->
+ * Production:          <output_statement> ->
  *                      	OUTPUT (<output_list>);
- *                      FIRST(<output_statement>) = {OUTPUT}
+ * First set:           FIRST(<output_statement>) = {OUTPUT}
  **********************************************************************/
 void output_statement(void) {
 
 
 
+    gen_incode("PLATY: output_statement parsed");
+
 }
 
 
@@ -634,15 +649,16 @@ void output_statement(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <output_list> ->
+ * Production:          <output_list> ->
  *                      	<opt_variable_list> | STR_T
- *                      FIRST(<output_list>) = {AVID_T, SVID_T, STR_T, ϵ, STR_T}
+ * First set:           FIRST(<output_list>) = {AVID_T, SVID_T, STR_T, ϵ, STR_T}
  **********************************************************************/
 void output_list(void) {
 
 
 
+    gen_incode("PLATY: output_list parsed");
+
 }
 
 
@@ -654,15 +670,16 @@ void output_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <optional_variable_list> ->
+ * Production:          <optional_variable_list> ->
  *                      	<variable_list> | ϵ
- *                      FIRST(<optional_variable_list>) = {AVID_T, SVID_T, STR_T, ϵ}
+ * First set:           FIRST(<optional_variable_list>) = {AVID_T, SVID_T, STR_T, ϵ}
  **********************************************************************/
 void optional_variable_list(void) {
 
 
 
+    gen_incode("PLATY: optional_variable_list parsed");
+
 }
 
 
@@ -674,15 +691,16 @@ void optional_variable_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <arithmetic_expression> - >
+ * Production:          <arithmetic_expression> - >
  *                      	<unary_arithmetic_expression> | <additive_arithmetic_expression>
- *                      FIRST(<arithmetic_expression>) = {-, +, AVID_T, FPL_T, INL_T, (}
+ * First set:           FIRST(<arithmetic_expression>) = {-, +, AVID_T, FPL_T, INL_T, (}
  **********************************************************************/
 void arithmetic_expression(void) {
 
 
 
+    gen_incode("PLATY: arithmetic_expression parsed");
+
 }
 
 
@@ -694,15 +712,16 @@ void arithmetic_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <unary_arithmetic_expression> ->
+ * Production:          <unary_arithmetic_expression> ->
  *                      	- <primary_arithmetic_expression> |	+ <primary_arithmetic_expression>
- *                      FIRST(<unary_arithmetic_expression>) = {-, +}
+ * First set:           FIRST(<unary_arithmetic_expression>) = {-, +}
  **********************************************************************/
 void unary_arithmetic_expression(void) {
 
 
 
+    gen_incode("PLATY: unary_arithmetic_expression parsed");
+
 }
 
 
@@ -714,15 +733,16 @@ void unary_arithmetic_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <additive_arithmetic_expression> ->
+ * Production:          <additive_arithmetic_expression> ->
  *                      	<multiplicative_arithmetic_expression> <additive_arithmetic_expression_prime>
- *                      FIRST(<additive_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
+ * First set:           FIRST(<additive_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
  **********************************************************************/
 void additive_arithmetic_expression(void) {
 
 
 
+    gen_incode("PLATY: additive_arithmetic_expression parsed");
+
 }
 
 
@@ -734,17 +754,18 @@ void additive_arithmetic_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <additive_arithmetic_expression_prime> ->
+ * Production:          <additive_arithmetic_expression_prime> ->
  *                      	+ <multiplicative_arithmetic_expression> <additive_arithmetic_expression_prime> |
  *                      	- <multiplicative_arithmetic_expression> <additive_arithmetic_expression_prime> |
  *                      	ϵ
- *                      FIRST(<additive_arithmetic_expression_prime>) = {+, -, ϵ}
+ * First set:           FIRST(<additive_arithmetic_expression_prime>) = {+, -, ϵ}
  **********************************************************************/
 void additive_arithmetic_expression_prime(void) {
 
 
 
+    gen_incode("PLATY: additive_arithmetic_expression_prime parsed");
+
 }
 
 
@@ -756,15 +777,16 @@ void additive_arithmetic_expression_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <multiplicative_arithmetic_expression> ->
+ * Production:          <multiplicative_arithmetic_expression> ->
  *                      	<primary_arithmetic_expression> <multiplicative_arithmetic_expression_prime>
- *                      FIRST(<multiplicative_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
+ * First set:           FIRST(<multiplicative_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
  **********************************************************************/
 void multiplicative_arithmetic_expression(void) {
 
 
 
+    gen_incode("PLATY: multiplicative_arithmetic_expression parsed");
+
 }
 
 
@@ -776,17 +798,18 @@ void multiplicative_arithmetic_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <multiplicative_arithmetic_expression_prime> ->
+ * Production:          <multiplicative_arithmetic_expression_prime> ->
  *                      	* <primary_arithmetic_expression> <multiplicative_arithmetic_expression_prime> |
  *                      	/ <primary_arithmetic_expression> <multiplicative_arithmetic_expression_prime> |
  *                      	ϵ
- *                      FIRST(<multiplicative_arithmetic_expression_prime>) = {*, /, ϵ}
+ * First set:           FIRST(<multiplicative_arithmetic_expression_prime>) = {*, /, ϵ}
  **********************************************************************/
 void multiplicative_arithmetic_expression_prime(void) {
 
 
 
+    gen_incode("PLATY: multiplicative_arithmetic_expression_prime parsed");
+
 }
 
 
@@ -798,15 +821,16 @@ void multiplicative_arithmetic_expression_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_arithmetic_expression> ->
+ * Production:          <primary_arithmetic_expression> ->
  *                      	AVID_T | FPL_T | INL_T | ( <arithmetic_expression> )
- *                      FIRST(<primary_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
+ * First set:           FIRST(<primary_arithmetic_expression>) = {AVID_T, FPL_T, INL_T, (}
  **********************************************************************/
 void primary_arithmetic_expression(void) {
 
 
 
+    gen_incode("PLATY: primary_arithmetic_expression parsed");
+
 }
 
 
@@ -818,15 +842,16 @@ void primary_arithmetic_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <string_expression> ->
+ * Production:          <string_expression> ->
  *                      	<primary_string_expression> <string_expression_prime>
- *                      FIRST(<string_expression>) = {SVID_T, STR_T}
+ * First set:           FIRST(<string_expression>) = {SVID_T, STR_T}
  **********************************************************************/
 void string_expression(void) {
 
 
 
+    gen_incode("PLATY: string_expression parsed");
+
 }
 
 
@@ -838,15 +863,16 @@ void string_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <string_expression_prime> ->
+ * Production:          <string_expression_prime> ->
  *                      	# <primary_string_expression> <string_expression_prime> | ϵ
- *                      FIRST(<string_expression_prime>) = {#, ϵ}
+ * First set:           FIRST(<string_expression_prime>) = {#, ϵ}
  **********************************************************************/
 void string_expression_prime(void) {
 
 
 
+    gen_incode("PLATY: string_expression_prime parsed");
+
 }
 
 
@@ -858,15 +884,16 @@ void string_expression_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_string_expression> ->
+ * Production:          <primary_string_expression> ->
  *                      	SVID_T | STR_T
- *                      FIRST(<primary_string_expression>) = {SVID_T, STR_T}
+ * First set:           FIRST(<primary_string_expression>) = {SVID_T, STR_T}
  **********************************************************************/
 void primary_string_expression(void) {
 
 
 
+    gen_incode("PLATY: primary_string_expression parsed");
+
 }
 
 
@@ -878,15 +905,16 @@ void primary_string_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <conditional_expression> ->
+ * Production:          <conditional_expression> ->
  *                      	<logical_OR_expression>
- *                      FIRST(<conditional_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
+ * First set:           FIRST(<conditional_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
  **********************************************************************/
 void conditional_expression(void) {
 
 
 
+    gen_incode("PLATY: conditional_expression parsed");
+
 }
 
 
@@ -898,15 +926,16 @@ void conditional_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <logical_OR_expression> ->
+ * Production:          <logical_OR_expression> ->
  *                      	<logical_AND_expression> <logical_OR_expression_prime>
- *                      FIRST(<logical_OR_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
+ * First set:           FIRST(<logical_OR_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
  **********************************************************************/
 void logical_OR_expression(void) {
 
 
 
+    gen_incode("PLATY: logical_OR_expression parsed");
+
 }
 
 
@@ -918,15 +947,16 @@ void logical_OR_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <logical_OR_expression_prime> ->
+ * Production:          <logical_OR_expression_prime> ->
  *                      	.OR. <logical_AND_expression> <logical_OR_expression_prime> | ϵ
- *                      FIRST(<logical_OR_expression_prime>) = {.OR., ϵ}
+ * First set:           FIRST(<logical_OR_expression_prime>) = {.OR., ϵ}
  **********************************************************************/
 void logical_OR_expression_prime(void) {
 
 
 
+    gen_incode("PLATY: logical_OR_expression_prime parsed");
+
 }
 
 
@@ -938,15 +968,16 @@ void logical_OR_expression_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <logical_AND_expression> ->
+ * Production:          <logical_AND_expression> ->
  *                      	<relational_expression> <logical_AND_expression_prime>
- *                      FIRST(<logical_AND_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
+ * First set:           FIRST(<logical_AND_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
  **********************************************************************/
 void logical_AND_expression(void) {
 
 
 
+    gen_incode("PLATY: logical_AND_expression parsed");
+
 }
 
 
@@ -958,15 +989,16 @@ void logical_AND_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <logical_AND_expression_prime> ->
+ * Production:          <logical_AND_expression_prime> ->
  *                      	.AND. <relational_expression> <logical_AND_expression_prime> | ϵ
- *                      FIRST(<logical_AND_expression prime>) = {.AND., ϵ}
+ * First set:           FIRST(<logical_AND_expression prime>) = {.AND., ϵ}
  **********************************************************************/
 void logical_AND_expression_prime(void) {
 
 
 
+    gen_incode("PLATY: logical_AND_expression_prime parsed");
+
 }
 
 
@@ -978,16 +1010,17 @@ void logical_AND_expression_prime(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <relational_expression> ->
+ * Production:          <relational_expression> ->
  *                      	<primary_a_relational_expression> <primary_a_relational_expression_list> |
  *                      	<primary_s_relational_expression> <primary_s_relational_expression_list>
- *                      FIRST(<relational_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
+ * First set:           FIRST(<relational_expression>) = {AVID_T, FPL_T, INL_T, SVID_T, STR_T}
  **********************************************************************/
 void relational_expression(void) {
 
 
 
+    gen_incode("PLATY: relational_expression parsed");
+
 }
 
 
@@ -999,18 +1032,19 @@ void relational_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_a_relational_expression_list> ->
+ * Production:          <primary_a_relational_expression_list> ->
  *                      	==  <primary_a_relational_expression> |
  *                      	<>  <primary_a_relational_expression> |
  *                      	>   <primary_a_relational_expression> |
  *                      	<   <primary_a_relational_expression>
- *                      FIRST(<primary_a_relational_expression list>) = {==, <>, >, <}
+ * First set:           FIRST(<primary_a_relational_expression list>) = {==, <>, >, <}
  **********************************************************************/
 void primary_a_relational_expression_list(void) {
 
 
 
+    gen_incode("PLATY: primary_a_relational_expression_list parsed");
+
 }
 
 
@@ -1022,18 +1056,19 @@ void primary_a_relational_expression_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_s_relational_expression_list> ->
+ * Production:          <primary_s_relational_expression_list> ->
  *                      	==  <primary_s_relational_expression> |
  *                      	<>  <primary_s_relational_expression> |
  *                      	>   <primary_s_relational_expression> |
  *                      	<   <primary_s_relational_expression>
- *                      FIRST(<primary_s_relational_expression list>) = {==, <>, >, <}
+ * First set:           FIRST(<primary_s_relational_expression list>) = {==, <>, >, <}
  **********************************************************************/
 void primary_s_relational_expression_list(void) {
 
 
 
+    gen_incode("PLATY: primary_s_relational_expression_list parsed");
+
 }
 
 
@@ -1045,15 +1080,16 @@ void primary_s_relational_expression_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_a_relational_expression> ->
+ * Production:          <primary_a_relational_expression> ->
  *                      	AVID_T | FPL_T | INL_T
- *                      FIRST(<primary_a_relational_expression>) = {AVID_T, FPL_T, INL_T}
+ * First set:           FIRST(<primary_a_relational_expression>) = {AVID_T, FPL_T, INL_T}
  **********************************************************************/
 void primary_a_relational_expression(void) {
 
 
 
+    gen_incode("PLATY: primary_a_relational_expression parsed");
+
 }
 
 
@@ -1065,14 +1101,15 @@ void primary_a_relational_expression(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Algorithm:
- *                      <primary_s_relational_expression> ->
+ * Production:          <primary_s_relational_expression> ->
  *                      	<primary_string_expression>
- *                      FIRST(<primary_s_relational_expression>) = {SVID_T, STR_T}
+ * First set:           FIRST(<primary_s_relational_expression>) = {SVID_T, STR_T}
  **********************************************************************/
 void primary_s_relational_expression(void) {
 
 
+
+    gen_incode("PLATY: primary_s_relational_expression parsed");
 
 }
 
