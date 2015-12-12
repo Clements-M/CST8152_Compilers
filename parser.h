@@ -72,8 +72,11 @@
 #define NO_ATTR     0       /* comments */
 
 /* extern definitions */
-extern Token mlwpar_next_token(Buffer* sc_buf);
-extern STD sym_table;
+extern Token mlwpar_next_token(Buffer *);
+extern char * kw_table[];
+extern int line;          /* source code line number - defined in scanner.c */
+extern STD sym_table;     /* Symbol Table Descriptor */
+extern Buffer * str_LTBL; /* this buffer implements String Literal Table */
 
 /* function prototypes */
 void parser(Buffer* in_buf);                            /* creates a Buffer structure and sets values with given parameters */
@@ -117,4 +120,4 @@ void primary_s_relational_expression_list(void);        /* comments */
 void primary_a_relational_expression(void);             /* comments */
 void primary_s_relational_expression(void);             /* comments */
 
-#endif /* PARSER_H */
+#endif /* PARSER_H_ */

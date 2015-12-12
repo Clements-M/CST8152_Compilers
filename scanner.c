@@ -23,6 +23,11 @@
  *                  malpar_next_token()
  *                  scanner_init()
  **********************************************************************/
+/* project header files */
+#include "buffer.h"
+#include "token.h"
+#include "table.h"
+#include "stable.h"
 
 /* The #define _CRT_SECURE_NO_WARNINGS should be used in MS Visual Studio projects
  * to suppress the warnings about using "unsafe" functions like fopen()
@@ -41,12 +46,6 @@
 /*#define NDEBUG*/          /* to suppress assert() call */
 #include <assert.h>         /* assert() prototype */
 
-/* project header files */
-#include "buffer.h"
-#include "token.h"
-#include "table.h"
-#include "stable.h"
-
 #define INIT_CAPACITY 200   /* initial buffer capacity */
 #define INC_FACTOR    15    /* increment factor */
 #define P_USHRT_MAX   65535 /* constant two-byte unsigned max */
@@ -59,7 +58,7 @@
    This buffer is used as a repository for string literals.
    It is defined in platy_st.c
 */
-extern Buffer * str_LTBL;                       /* string literal table */
+extern Buffer* str_LTBL;                        /* string literal table */
 int line;                                       /* current line number of the source code */
 extern int scerrnum;                            /* defined in platy_st.c - run-time error number */
 extern STD sym_table;                           /* defined in platy_tt.c */
@@ -110,7 +109,7 @@ int scanner_init(Buffer * sc_buf) {
  *                      return tempBuffer
  ** Important note:     It is the responsibility of the calling function to test for null buffer**
  **********************************************************************/
-Token mlwpar_next_token(Buffer * sc_buf){
+Token mlwpar_next_token(Buffer* sc_buf){
     Token t;             /* token to return after recognition */
     unsigned char c;     /* input symbol */
     int state = 0;       /* initial state of the FSM */
