@@ -29,7 +29,7 @@
  *                  variable_list_prime();
  *                  output_statement();
  *                  output_list();
- *                  optional_variable_list();
+ *                  opt_variable_list();
  *                  arithmetic_expression();
  *                  unary_arithmetic_expression();
  *                  additive_arithmetic_expression();
@@ -95,7 +95,7 @@ void variable_list(void);                               /* comments */
 void variable_list_prime(void);                         /* comments */
 void output_statement(void);                            /* comments */
 void output_list(void);                                 /* comments */
-void optional_variable_list(void);                      /* comments */
+void opt_variable_list(void);                           /* comments */
 void arithmetic_expression(void);                       /* comments */
 void unary_arithmetic_expression(void);                 /* comments */
 void additive_arithmetic_expression(void);              /* comments */

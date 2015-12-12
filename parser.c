@@ -29,7 +29,7 @@
  *                  variable_list_prime();
  *                  output_statement();
  *                  output_list();
- *                  optional_variable_list();
+ *                  opt_variable_list();
  *                  arithmetic_expression();
  *                  unary_arithmetic_expression();
  *                  additive_arithmetic_expression();
@@ -699,11 +699,11 @@ void output_list(void) {
  * Called functions:    none
  * Parameters:          none
  * Return value:        none
- * Production:          <optional_variable_list> ->
+ * Production:          <opt_variable_list> ->
  *                      	<variable_list> | ϵ
- * First set:           FIRST(<optional_variable_list>) = {AVID_T, SVID_T, STR_T, ϵ}
+ * First set:           FIRST(<opt_variable_list>) = {AVID_T, SVID_T, STR_T, ϵ}
  **********************************************************************/
-void optional_variable_list(void) {
+void opt_variable_list(void) {
 
 
 
