@@ -1190,7 +1190,7 @@ void primary_arithmetic_expression(void) {
             break;
 
         case LPR_T:
-            match(lookahead.code, lookahead.attribute.arr_op);
+            match(LPR_T, NO_ATTR);
             arithmetic_expression();
             match(RPR_T, NO_ATTR);
             break;
