@@ -1,0 +1,126 @@
+Reading file ass2r.pls ....Please wait
+
+Printing input buffer parameters:
+
+The capacity of the buffer is:  575
+The current size of the buffer is:  574
+
+Printing input buffer contents:
+
+!< This program calculates the sum of 32767 even numbers.
+!< The program is "lexically" and "syntactically" correct
+!< and should not produce any error
+PLATYPUS {
+ 
+ a=+0.0;
+ 
+ sum008 = 7.87050 ;
+ INPUT(a,sum008); 
+ USING(i = 0,i < 32767 .OR. i == 077777,i = i + 02 )REPEAT{
+   a=
+   a*i/0.5
+   ;
+   sum008 = sum008 + a - 1 ;
+ };
+ IF(text% == "")THEN
+   text% = "prog" # "ram";
+ ELSE {
+   text% = text% # "ram";
+ };
+ OUTPUT("\* This is a platypus -:)-<-<-- \*");
+ OUTPUT(text%);
+ 
+ IF(text% == "program".OR.sum008<>8..AND.i>012)THEN
+  OUTPUT(sum008);
+  OUTPUT();
+ ELSE{};
+}
+
+
+Parsing the source file...
+
+PLATY: Syntax error:  Line:  6
+*****  Token code:  9 Attribute: 0
+PLATY: Syntax error:  Line:  6
+*****  Token code:  9 Attribute: 0
+PLATY: Syntax error:  Line:  6
+*****  Token code:  9 Attribute: 0
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line:  6
+*****  Token code: 18 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list parsed
+PLATY: Input statement parsed
+PLATY: Statement parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Syntax error:  Line: 10
+*****  Token code: 11 Attribute: 1
+PLATY: Logical AND expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Logical AND expression parsed
+PLATY: Logical OR expression prime parsed
+PLATY: Logical OR expression parsed
+PLATY: Conditional expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 10
+*****  Token code:  9 Attribute: 0
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 10
+*****  Token code: 13 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 13
+*****  Token code: 18 Attribute: NA
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 13
+*****  Token code: 18 Attribute: NA
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 14
+*****  Token code:  9 Attribute: 0
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 14
+*****  Token code:  9 Attribute: 1
+PLATY: Multiplicative arithmetic expression parsed
+PLA

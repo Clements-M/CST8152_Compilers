@@ -1,0 +1,30 @@
+Reading file ass4w1.pls ....Please wait
+
+Printing input buffer parameters:
+
+The capacity of the buffer is:  286
+The current size of the buffer is:  285
+
+Printing input buffer contents:
+
+!<This program contains a syntax error
+
+PLATYPUS{
+OUTPUT("If there is a possibility of several things going wrong,
+         the one that will cause the most damage will be the first
+         one to go wrong. Murphy's law");
+ c=(-(d+e))*f-
+   ((d-e)*a)/f); !< Missing "(" or extra ")"
+}
+
+Parsing the source file...
+
+PLATY: Opt_statements parsed
+PLATY: Syntax error:  Line:  4
+*****  Token code: 16 Attribute: OUTPUT
+PLATY: Program parsed
+PLATY: Source file parsed
+
+Syntax errors: 1
+
+Collecting garbage...

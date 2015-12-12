@@ -1,0 +1,202 @@
+Reading file ass4r.pls ....Please wait
+
+Printing input buffer parameters:
+
+The capacity of the buffer is:  451
+The current size of the buffer is:  450
+
+Printing input buffer contents:
+
+!<This is a syntactically correct PLATYPUS program
+!<Weiler's law:
+!<"Nothing is impossible for the man who doesn't have to do it himself."
+!<"Parsing is passing." S^R & Compilers' law
+
+PLATYPUS{
+ a=-01;
+ b=+0.;
+ INPUT(c);
+ INPUT(d,e,f);
+ c=((d+e)/a)*f-(((d-e)*a)/f);
+ USING(a = a,a<>b .OR. c==d .AND. e<f .OR. a>0,c = e)REPEAT{
+   IF(a==1 .AND. b==0.0)THEN
+    c=-(5.9);
+   ELSE {c=-c;};  
+ };   
+ OUTPUT();
+ OUTPUT("Results: ");
+ OUTPUT(d,e,f,a);
+}
+
+Parsing the source file...
+
+PLATY: Syntax error:  Line:  7
+*****  Token code:  9 Attribute: 1
+PLATY: Syntax error:  Line:  7
+*****  Token code:  9 Attribute: 1
+PLATY: Syntax error:  Line:  7
+*****  Token code:  9 Attribute: 1
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line:  7
+*****  Token code: 18 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Syntax error:  Line:  8
+*****  Token code:  9 Attribute: 0
+PLATY: Syntax error:  Line:  8
+*****  Token code:  9 Attribute: 0
+PLATY: Syntax error:  Line:  8
+*****  Token code:  9 Attribute: 0
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line:  8
+*****  Token code: 18 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list parsed
+PLATY: Input statement parsed
+PLATY: Statement parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list prime parsed
+PLATY: Variable list parsed
+PLATY: Input statement parsed
+PLATY: Statement parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code:  9 Attribute: 0
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 13 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 13 Attribute: NA
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code:  9 Attribute: 1
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code:  9 Attribute: 1
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code:  9 Attribute: 1
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 13 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 13 Attribute: NA
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 13 Attribute: NA
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression prime parsed
+PLATY: Syntax error:  Line: 11
+*****  Token code: 18 Attribute: NA
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Assignment statement parsed
+PLATY: Statement parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Syntax error:  Line: 12
+*****  Token code: 11 Attribute: 1
+PLATY: Logical AND expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Syntax error:  Line: 12
+*****  Token code: 11 Attribute: 1
+PLATY: Syntax error:  Line: 12
+*****  Token code: 11 Attribute: 1
+PLATY: Logical AND expression parsed
+PLATY: Logical AND expression prime parsed
+PLATY: Logical AND expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression parsed
+PLATY: Primary a relational expression list parsed
+PLATY: Relational expression parsed
+PLATY: Logical AND expression parsed
+PLATY: Logical OR expression prime parsed
+PLATY: Logical OR expression prime parsed
+PLATY: Logical OR expression parsed
+PLATY: Conditional expression parsed
+PLATY: Primary arithmetic expression parsed
+PLATY: Multiplicative arithmetic expression parsed
+PLATY: Additive arithmetic expression parsed
+PLATY: Arithmetic expression parsed
+PLATY: Assignment expression parsed
+PLATY: Opt_statements parsed
+PLATY: Syntax error:  Line: 13
+*****  Token code: 16 Attribute: IF
+PLATY: Iteration statement parsed
+PLATY: Statement parsed
+PLATY: Statement prime parsed
+PLATY: Statement prime parsed
+PLATY: Statement prime parsed
+PLATY: Statement prime parsed
+PLATY: Statement prime parsed
+PLATY: Statement prime parsed
+PLATY: Statements parsed
+PLATY: Opt_statements parsed
+PLATY: Program parsed
+PLATY: Syntax error:  Line: 16
+*****  Token code: 18 Attribute: NA
+PLATY: Source file parsed
+
+Syntax errors: 2
+
+Collecting garbage...

@@ -136,39 +136,59 @@ void parser(Buffer* in_buf) {
  **********************************************************************/
 void match(int pr_token_code,int pr_token_attribute) {
 
-	int code = lookahead.code;		/*makes a shorter if statement*/
-
-	/*We know for sure that there is an error*/
-	if (code != pr_token_code) {
-		syn_eh(pr_token_code);
-		return;
-	}
-
-	/*Test further for attribute equality.*/
-	if ((code == KW_T && pr_token_attribute != lookahead.attribute.int_value)
-		|| (code == REL_OP_T && pr_token_attribute != lookahead.attribute.rel_op)
-		|| (code == LOG_OP_T && pr_token_attribute != lookahead.attribute.log_op)
-		|| (code == ART_OP_T && pr_token_attribute != lookahead.attribute.arr_op) )
+	/*If the token code itself is not a match, no need to check attribute */
+	if ( pr_token_code != lookahead.code )
 	{
 		syn_eh(pr_token_code);
 		return;
 	}
-
-	/*Handle End of File before the scanner generates an error*/
-	if (code == SEOF_T){
-
-		return;
+	
+	/*Enter with matching code, check the 4 if the attribute is valid */
+	switch ( pr_token_code ) {
+	case KW_T:
+		if( pr_token_attribute != lookahead.attribute.int_value)
+		{
+			syn_eh(pr_token_code);
+			return;
+		}	
+		break;
+	case LOG_OP_T:
+		if( pr_token_attribute != lookahead.attribute.log_op)
+		{
+			syn_eh(pr_token_code);
+			return;
+		}	
+		break;
+	case ART_OP_T:
+		if( pr_token_attribute != lookahead.attribute.arr_op)
+		{
+			syn_eh(pr_token_code);
+			return;
+		}	
+		break;
+	case REL_OP_T:
+		if( pr_token_attribute != lookahead.attribute.rel_op)
+		{
+			syn_eh(pr_token_code);
+			return;
+		}	
+		break;
 	}
+	/* Matching code, and matching attribute at this point */
 
-	lookahead = mlwpar_next_token(sc_buf);
-
-	/*handle errors caught in the scanner*/
-	if (lookahead.code == ERR_T){
-		syn_printe();
-		lookahead = mlwpar_next_token(sc_buf);
-		synerrno++;
+	/*Successful match, now check if lookahead is SEOF */
+	if ( lookahead.code == SEOF_T )
 		return;
-	}
+
+	lookahead = mlwpar_next_token (sc_buf);
+	
+	if( lookahead.code == ERR_T )
+	{
+			syn_printe();
+			lookahead = mlwpar_next_token (sc_buf);
+			++synerrno;
+			return;
+	}	
 }
 
 
@@ -224,17 +244,12 @@ void syn_eh(int sync_token_code){
 
 
 /***********************************************************************
- * Purpose:             prints error messages
- * Author:
+ * Purpose:             Parser error printing function, Assignmet 4, F15
+ * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
- * Return value:        pointer to Buffer
+ * Called functions:    printf()
+ *                      b_setmark()
+ * Parameters:          none
  * Algorithm:           Step 5:
  *                      Write the error printing function syn_printe() .
  *                      void syn_printe()
@@ -259,76 +274,78 @@ void syn_eh(int sync_token_code){
  *                      Similarly, you must use the symbol table or the string literal table to print the variable
  *                      names or the sting literals.
  **********************************************************************/
-void syn_printe() {
-	Token t = lookahead;
+/* Parser error printing function, Assignmet 4, F15
+ */
+void syn_printe(){
+Token t = lookahead;
 
-	printf("PLATY: Syntax error:  Line:%3d\n",line);
-	printf("*****  Token code:%3d Attribute: ", t.code);
-	switch(t.code){
-		case  ERR_T: /* ERR_T     0   Error token */
-			printf("%s\n",t.attribute.err_lex);
-		 break;
-		case  SEOF_T: /*SEOF_T    1   Source end-of-file token */
-			printf("NA\n" );
-		 break;
-		case  AVID_T: /* AVID_T    2   Arithmetic Variable identifier token */
-		case  SVID_T :/* SVID_T    3  String Variable identifier token */
-			printf("%s\n",sym_table.pstvr[t.attribute.get_int].plex);
-		 break;
-		case  FPL_T: /* FPL_T     4  Floating point literal token */
-			printf("%5.1f\n",t.attribute.flt_value);
-		 break;
-		case INL_T: /* INL_T      5   Integer literal token */
-		        printf("%d\n",t.attribute.get_int);
-		 break;
-		case STR_T:/* STR_T     6   String literal token */
-		        printf("%s\n",(str_LTBL->cb_head + t.attribute.get_int));
-		break;
-
-	     case SCC_OP_T: /* 7   String concatenation operator token */
-		        printf("NA\n" );
-		break;
-
-		case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
-			printf("NA\n" );
-		break;
-		case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
-			printf("%d\n",t.attribute.get_int);
-		break;
-		case  REL_OP_T: /*REL_OP_T  10   Relational operator token */
-			printf("%d\n",t.attribute.get_int);
-		break;
-		case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
-			printf("%d\n",t.attribute.get_int);
-		break;
-
-		case  LPR_T: /*LPR_T    12  Left parenthesis token */
-			printf("NA\n" );
-		break;
-		case  RPR_T: /*RPR_T    13  Right parenthesis token */
-		        printf("NA\n" );
-		break;
-		case LBR_T: /*    14   Left brace token */
-		        printf("NA\n" );
-		break;
-		case RBR_T: /*    15  Right brace token */
-		        printf("NA\n" );
-		break;
-
-		case KW_T: /*     16   Keyword token */
-		        printf("%s\n",kw_table [t.attribute.get_int]);
-		break;
-
-		case COM_T: /* 17   Comma token */
-		        printf("NA\n");
-		break;
-		case EOS_T: /*    18  End of statement *(semi - colon) */
-		        printf("NA\n" );
-		break;
-		default:
-		        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
-	}
-}
+printf("PLATY: Syntax error:  Line:%3d\n",line);
+printf("*****  Token code:%3d Attribute: ", t.code);
+switch(t.code){
+	case  ERR_T: /* ERR_T     0   Error token */
+		printf("%s\n",t.attribute.err_lex);
+	 break;
+	case  SEOF_T: /*SEOF_T    1   Source end-of-file token */
+		printf("NA\n" );
+	 break;
+	case  AVID_T: /* AVID_T    2   Arithmetic Variable identifier token */
+	case  SVID_T :/* SVID_T    3  String Variable identifier token */
+		printf("%s\n",sym_table.pstvr[t.attribute.get_int].plex);
+	 break;
+	case  FPL_T: /* FPL_T     4  Floating point literal token */
+		printf("%5.1f\n",t.attribute.flt_value);
+	 break;
+	case INL_T: /* INL_T      5   Integer literal token */
+	        printf("%d\n",t.attribute.get_int);
+	 break;
+	case STR_T:/* STR_T     6   String literal token */
+	        printf("%s\n",b_setmark(str_LTBL,t.attribute.str_offset));
+	break;
+        
+        case SCC_OP_T: /* 7   String concatenation operator token */
+	        printf("NA\n" );
+	break;
+	
+	case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
+		printf("NA\n" );
+	break;
+	case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
+		printf("%d\n",t.attribute.get_int);
+	break;
+	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */ 
+		printf("%d\n",t.attribute.get_int);
+	break;
+	case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
+		printf("%d\n",t.attribute.get_int);
+	break;
+	
+	case  LPR_T: /*LPR_T    12  Left parenthesis token */
+		printf("NA\n" );
+	break;
+	case  RPR_T: /*RPR_T    13  Right parenthesis token */
+	        printf("NA\n" );
+	break;
+	case LBR_T: /*    14   Left brace token */
+	        printf("NA\n" );
+	break;
+	case RBR_T: /*    15  Right brace token */
+	        printf("NA\n" );
+	break;
+		
+	case KW_T: /*     16   Keyword token */
+	        printf("%s\n",kw_table [t.attribute.get_int]);
+	break;
+	
+	case COM_T: /* 17   Comma token */
+	        printf("NA\n");
+	break;
+	case EOS_T: /*    18  End of statement *(semi - colon) */
+	        printf("NA\n" );
+	break; 		
+	default:
+	        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
+    }/*end switch*/
+}/* end syn_printe()*/
 
 
 /***********************************************************************
