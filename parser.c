@@ -1098,7 +1098,19 @@ void primary_a_relational_expression_list(void) {
  **********************************************************************/
 void primary_s_relational_expression_list(void) {
 
+    switch(lookahead.attribute.rel_op) {
 
+        case EQ:
+        case NE:
+        case GT:
+        case LT:
+            match(lookahead.code, lookahead.attribute.arr_op);
+            primary_s_relational_expression();
+            break;
+        default: /* print error on anything else */
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Primary s relational expression list parsed");
 
@@ -1119,7 +1131,17 @@ void primary_s_relational_expression_list(void) {
  **********************************************************************/
 void primary_a_relational_expression(void) {
 
+    switch (lookahead.code) {
 
+        case AVID_T:
+        case FPL_T:
+        case INL_T:
+            match(lookahead.code, lookahead.attribute.rel_op);
+            break;
+        default: /* print error on anything else */
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Primary a relational expression parsed");
 
@@ -1140,7 +1162,16 @@ void primary_a_relational_expression(void) {
  **********************************************************************/
 void primary_s_relational_expression(void) {
 
+    switch (lookahead.code) {
 
+        case SVID_T:
+        case STR_T:
+            primary_string_expression();
+            break;
+        default: /* print error on anything else */
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Primary s relational expression parsed");
 
