@@ -1,0 +1,37 @@
+Reading file ass4w3.pls ....Please wait
+
+Printing input buffer parameters:
+
+The capacity of the buffer is:  348
+The current size of the buffer is:  347
+
+Printing input buffer contents:
+
+!<This program contains a syntax error
+!<Forsyth's second corollary to Murphy's law:
+!<"Just when you see the light at the end of the tunnel, the roof caves."
+
+PLATYPUS{
+ INPUT(IF);
+ a% = "";
+ INPUT(b,a,b%);
+ IF(if == "begin" .AND a% |= a)THEN
+   a% = "begin" # a% # b% # "end";
+ 
+^@#$& ELSE{REPEAT};
+PLATYPUS !<What is this creature doing here?
+}
+
+Parsing the source file...
+
+PLATY: Opt_statements parsed
+PLATY: Syntax error:  Line:  6
+*****  Token code: 16 Attribute: INPUT
+PLATY: Program parsed
+PLATY: Syntax error:  Line: 12
+*****  Token code: 18 Attribute: NA
+PLATY: Source file parsed
+
+Syntax errors: 2
+
+Collecting garbage...
