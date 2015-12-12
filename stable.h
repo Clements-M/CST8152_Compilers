@@ -42,8 +42,10 @@ typedef struct SymbolTableDescriptor {
 /* MASKS*/
 /* 16 bit field  MSB-> 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 <-LSB */
 #define RESET_ALL   0x0000 /* 0000 0000 0000 0000 */
+/*OMFG THESER WERE REVERSED :( */
 #define RESET_0201  0x0001 /* 0000 0000 0000 0001 */
 #define RESET_00    0x0006
+/*NOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
 #define DEFAULT     0xFFF8
 #define SET_00_0    0xFFF8
 #define SET_00_1    0xFFF9
@@ -59,6 +61,8 @@ typedef struct SymbolTableDescriptor {
 
 #define INIT_CAPACITY 200   /* initial buffer capacity */
 #define INC_FACTOR    15    /* increment factor */
+
+#define FAIL R_FAIL_1
 
 /* forward declarations */
 STD st_create(int st_size);

@@ -11,8 +11,8 @@
  * Purpose:         Implementing and Incorporating a Symbol Table
  * Function list:   st_create()
  **********************************************************************/
-#include "stable.h"
 #include <string.h>
+#include "stable.h"
 
 extern STD sym_table;  /* defined in platy_tt.c */
 static void st_setsize(void);
@@ -117,6 +117,13 @@ int st_install(STD sym_table, char *lexeme, char type, int line){
 
     }
 
+	/* if symbol table's buffer is full, return fail -1 */
+	if ( b_isfull(sym_table.plsBD) ) {
+
+        return R_FAIL_1;
+
+    }
+
     /* if lexeme is in symbol table, return record index */
     if ( lex_offset != -1 ) {
 
@@ -134,9 +141,11 @@ int st_install(STD sym_table, char *lexeme, char type, int line){
     temp_pointer = b_setmark(sym_table.plsBD, b_size(sym_table.plsBD));
 
     /* copy lexeme to CA buffer */
-    for ( i = 0; i < lex_length + 1; i++ ) {
+    for ( i = 0; i <= lex_length; i++ ) {
 
-        b_addc(sym_table.plsBD, lexeme[i]);
+        if(b_addc(sym_table.plsBD, lexeme[i]) == NULL){
+            return R_FAIL_1;
+        }
 
         if (sym_table.plsBD->r_flag) {
 
@@ -155,6 +164,7 @@ int st_install(STD sym_table, char *lexeme, char type, int line){
 
             lex_length = strlen(sym_table.plsBD->cb_head + lex_offset);
 
+            //TODO: Change to buffer_setmark()
             sym_table.pstvr[i].plex = sym_table.plsBD->cb_head + lex_offset;
 
             lex_offset += lex_length + 1;
@@ -323,7 +333,7 @@ static void st_setsize(void) {
  **********************************************************************/
 static void st_incoffset(void) {
 
-    sym_table.st_offset++;
+    ++sym_table.st_offset;
 
 }
 
@@ -381,7 +391,7 @@ int st_store(STD sym_table) {
 
         fprintf(stf, " %4X %lu %s %d",
                 sym_table.pstvr[i].status_field,
-                strlen(sym_table.pstvr[i].plex),
+                (unsigned long)strlen(sym_table.pstvr[i].plex),
                 sym_table.pstvr[i].plex,
                 sym_table.pstvr[i].o_line);
 
@@ -452,13 +462,20 @@ int st_update_type(STD sym_table,int vid_offset,char v_type) {
         return R_FAIL_1;
     }
 
-    if ( v_type != 'I' || v_type != 'F') {
+    if ( v_type != 'I' && v_type != 'F') {
 
         return R_FAIL_1;
 
     }
 
-    if ( vid_offset > sym_table.st_offset ) {
+    if ( vid_offset >= sym_table.st_offset ) {
+
+
+        return R_FAIL_1;
+
+    }
+
+    if ( vid_offset < 0 ) {
 
         return R_FAIL_1;
     }
@@ -520,7 +537,12 @@ int st_update_value(STD sym_table, int vid_offset, InitialValue i_value) {
         return R_FAIL_1;
     }
 
-    if ( vid_offset > sym_table.st_offset ) {
+    if ( vid_offset >= sym_table.st_offset ) {
+
+        return R_FAIL_1;
+    }
+
+    if ( vid_offset < 0 ) {
 
         return R_FAIL_1;
     }

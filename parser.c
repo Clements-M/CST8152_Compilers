@@ -51,9 +51,11 @@
  *                  primary_a_relational_expression();
  *                  primary_s_relational_expression();
  **********************************************************************/
-#include "parser.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "parser.h"
 
 /*
     Define two static global variables: lookahead of type
@@ -134,9 +136,39 @@ void parser(Buffer* in_buf) {
  **********************************************************************/
 void match(int pr_token_code,int pr_token_attribute) {
 
+	int code = lookahead.code;		/*makes a shorter if statement*/
 
+	/*We know for sure that there is an error*/
+	if (code != pr_token_code) {
+		syn_eh(pr_token_code);
+		return;
+	}
 
+	/*Test further for attribute equality.*/
+	if ((code == KW_T && pr_token_attribute != lookahead.attribute.int_value)
+		|| (code == REL_OP_T && pr_token_attribute != lookahead.attribute.rel_op)
+		|| (code == LOG_OP_T && pr_token_attribute != lookahead.attribute.log_op)
+		|| (code == ART_OP_T && pr_token_attribute != lookahead.attribute.arr_op) )
+	{
+		syn_eh(pr_token_code);
+		return;
+	}
 
+	/*Handle End of File before the scanner generates an error*/
+	if (code == SEOF_T){
+
+		return;
+	}
+
+	lookahead = mlwpar_next_token(sc_buf);
+
+	/*handle errors caught in the scanner*/
+	if (lookahead.code == ERR_T){
+		syn_printe();
+		lookahead = mlwpar_next_token(sc_buf);
+		synerrno++;
+		return;
+	}
 }
 
 
@@ -166,11 +198,28 @@ void match(int pr_token_code,int pr_token_attribute) {
  *                      advances the input token one more time and returns. If a matching token is found and
  *                      the matching token is SEOF_T, the function returns.
  **********************************************************************/
-void syn_eh(int sync_token_code) {
+void syn_eh(int sync_token_code){
 
+	/*Print the error and increment the error count*/
+	syn_printe();
+	synerrno++;
 
+	/*If we are looking for end of file, let's just leave early*/
+	if (sync_token_code == SEOF_T){
+		return;
+	}
 
+	/*sync up the parser by finding the next occurence of sync token*/
+	while (lookahead.code != sync_token_code) {
 
+		lookahead = mlwpar_next_token(sc_buf);
+		if (lookahead.code == SEOF_T){
+			exit(synerrno);
+		}
+	}
+
+	/*let's advance once more now that we know we are safe*/
+	lookahead = mlwpar_next_token(sc_buf);
 }
 
 
@@ -211,10 +260,74 @@ void syn_eh(int sync_token_code) {
  *                      names or the sting literals.
  **********************************************************************/
 void syn_printe() {
+	Token t = lookahead;
 
+	printf("PLATY: Syntax error:  Line:%3d\n",line);
+	printf("*****  Token code:%3d Attribute: ", t.code);
+	switch(t.code){
+		case  ERR_T: /* ERR_T     0   Error token */
+			printf("%s\n",t.attribute.err_lex);
+		 break;
+		case  SEOF_T: /*SEOF_T    1   Source end-of-file token */
+			printf("NA\n" );
+		 break;
+		case  AVID_T: /* AVID_T    2   Arithmetic Variable identifier token */
+		case  SVID_T :/* SVID_T    3  String Variable identifier token */
+			printf("%s\n",sym_table.pstvr[t.attribute.get_int].plex);
+		 break;
+		case  FPL_T: /* FPL_T     4  Floating point literal token */
+			printf("%5.1f\n",t.attribute.flt_value);
+		 break;
+		case INL_T: /* INL_T      5   Integer literal token */
+		        printf("%d\n",t.attribute.get_int);
+		 break;
+		case STR_T:/* STR_T     6   String literal token */
+		        printf("%s\n",(str_LTBL->cb_head + t.attribute.get_int));
+		break;
 
+	     case SCC_OP_T: /* 7   String concatenation operator token */
+		        printf("NA\n" );
+		break;
 
+		case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
+			printf("NA\n" );
+		break;
+		case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
+			printf("%d\n",t.attribute.get_int);
+		break;
+		case  REL_OP_T: /*REL_OP_T  10   Relational operator token */
+			printf("%d\n",t.attribute.get_int);
+		break;
+		case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
+			printf("%d\n",t.attribute.get_int);
+		break;
 
+		case  LPR_T: /*LPR_T    12  Left parenthesis token */
+			printf("NA\n" );
+		break;
+		case  RPR_T: /*RPR_T    13  Right parenthesis token */
+		        printf("NA\n" );
+		break;
+		case LBR_T: /*    14   Left brace token */
+		        printf("NA\n" );
+		break;
+		case RBR_T: /*    15  Right brace token */
+		        printf("NA\n" );
+		break;
+
+		case KW_T: /*     16   Keyword token */
+		        printf("%s\n",kw_table [t.attribute.get_int]);
+		break;
+
+		case COM_T: /* 17   Comma token */
+		        printf("NA\n");
+		break;
+		case EOS_T: /*    18  End of statement *(semi - colon) */
+		        printf("NA\n" );
+		break;
+		default:
+		        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
+	}
 }
 
 
@@ -419,7 +532,7 @@ void statement_prime(void) {
         case AVID_T:
         case SVID_T:
             statement();
-            statements_prime();
+            statement_prime();
             break;
     }
 
@@ -685,7 +798,7 @@ void input_statement(void) {
  * Author:              Cory Hilliard    040 630 141
  *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
- * Called functions:    none
+ * Called functions:    variable_identifier(), variable_list_prime()
  * Parameters:          none
  * Return value:        none
  * Production:          <variable_list> ->
@@ -700,6 +813,35 @@ void variable_list(void) {
     gen_incode("PLATY: Variable list parsed");
 
 }
+
+/***********************************************************************
+ * Purpose:             for parsing variable identifier
+ * Author:              Cory Hilliard    040 630 141
+ *                      Matthew Clements 040 766 220
+ * History/Versions:    1.0
+ * Called functions:    match()
+ * Parameters:          none
+ * Return value:        none
+ * Production:          <variable _identifier> ->
+ *                      	AVID_T | SVID_T
+ * First set:           FIRST(<variable_identifier>) = {AVID_T, SVID_T}
+ **********************************************************************/
+void variable_identifier(void) {
+    switch(lookahead.code) {
+
+        case AVID_T:
+        case SVID_T:
+            match(lookahead.code, NO_ATTR);
+            break;
+
+        /* print error on anything else */
+        default:
+            syn_printe();
+
+    }
+}
+
+
 
 
 /***********************************************************************

@@ -58,7 +58,7 @@
 #include "buffer.h"         /* comments */
 #include "stable.h"         /* comments */
 #include "token.h"          /* comments */
-#include "table.h"          /* comments */
+/*#include "table.h"          /* comments */
 
 /* defines */
 #define ELSE        0       /* comments */
@@ -72,11 +72,11 @@
 #define NO_ATTR     0       /* comments */
 
 /* extern definitions */
-extern Token mlwpar_next_token(Buffer *);
-extern char * kw_table[];
-extern int line;          /* source code line number - defined in scanner.c */
-extern STD sym_table;     /* Symbol Table Descriptor */
-extern Buffer * str_LTBL; /* this buffer implements String Literal Table */
+extern Token mlwpar_next_token(Buffer* sc_buf);
+extern STD sym_table;
+extern int line;                /* line number counter */
+extern Buffer * str_LTBL;       /* string literal table */
+extern char * kw_table [];
 
 /* function prototypes */
 void parser(Buffer* in_buf);                            /* creates a Buffer structure and sets values with given parameters */
@@ -84,10 +84,11 @@ void match(int pr_token_code,int pr_token_attribute);   /* matches the current i
 void syn_eh(int sync_token_code);                       /* implements a simple panic mode error recovery */
 void syn_printe();                                      /* prints error messages */
 void gen_incode(char* incode);                          /* assignment the function takes a string as an argument and prints it */
+
 void program(void);                                     /* comments */
 void opt_statements(void);                              /* comments */
-void statements(void);                                  /* comments */
 void statement_prime(void);                             /* comments */
+void statements(void);                                  /* comments */
 void statement(void);                                   /* comments */
 void assignment_statement(void);                        /* comments */
 void assignment_expression(void);                       /* comments */
@@ -98,6 +99,7 @@ void variable_list(void);                               /* comments */
 void variable_list_prime(void);                         /* comments */
 void output_statement(void);                            /* comments */
 void output_list(void);                                 /* comments */
+void variable_identifier(void);
 void opt_variable_list(void);                           /* comments */
 void arithmetic_expression(void);                       /* comments */
 void unary_arithmetic_expression(void);                 /* comments */
