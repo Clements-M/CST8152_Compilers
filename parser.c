@@ -900,8 +900,16 @@ void string_expression(void) {
  **********************************************************************/
 void string_expression_prime(void) {
 
+    /* test for string concatination opperator, else epsilon */
+    if(lookahead.code == SCC_OP_T) {
 
+        match(lookahead.code, lookahead.attribute.arr_op);
+        primary_string_expression();
+        string_expression_prime();
 
+    }
+
+    /* print string parsed even if string is empty */
     gen_incode("PLATY: String expression prime parsed");
 
 }
@@ -921,7 +929,18 @@ void string_expression_prime(void) {
  **********************************************************************/
 void primary_string_expression(void) {
 
+    switch(lookahead.code) {
 
+        case SVID_T:
+        case STR_T;
+            match(lookahead.code, lookahead.attribute.arr_op);
+            break;
+
+        /* print error on anything else */
+        default:
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Primary string expression parsed");
 
@@ -985,9 +1004,27 @@ void logical_OR_expression(void) {
  **********************************************************************/
 void logical_OR_expression_prime(void) {
 
+    /* test for logical operator token, do nothing if epsilon */
+    if (lookahead.code == LOG_OP_T) {
 
+        switch(lookahead.attribute.log_op) {
 
-    gen_incode("PLATY: Logical OR expression prime parsed");
+            case OR;
+                match(lookahead.code, lookahead.attribute.arr_op);
+                logical_AND_expression();
+                logical_OR_expression_prime();
+                break;
+
+            /* print error on anything else */
+            default:
+                syn_printe();
+
+        }
+
+        gen_incode("PLATY: Logical OR expression prime parsed");
+
+    }
+
 
 }
 
@@ -1028,9 +1065,26 @@ void logical_AND_expression(void) {
  **********************************************************************/
 void logical_AND_expression_prime(void) {
 
+    /* test for logical operator token, do nothing if epsilon */
+    if (lookahead.code == LOG_OP_T) {
 
+        switch(lookahead.attribute.log_op) {
 
-    gen_incode("PLATY: Logical AND expression prime parsed");
+            case AND;
+                match(lookahead.code, lookahead.attribute.arr_op);
+                relational_expression();
+                logical_AND_expression();
+                break;
+
+            /* print error on anything else */
+            default:
+                syn_printe();
+
+        }
+
+        gen_incode("PLATY: Logical AND expression prime parsed");
+
+    }
 
 }
 
@@ -1050,7 +1104,26 @@ void logical_AND_expression_prime(void) {
  **********************************************************************/
 void relational_expression(void) {
 
+    switch(lookahead.code) {
 
+        case AVID_T:
+        case FPL_T:
+        case INL_T:
+            primary_a_relational_expression();
+            primary_a_relational_expression_list();
+            break:
+
+        case SVID_T:
+        case STR_T:
+            primary_s_relational_expression();
+            primary_s_relational_expression_list();
+            break;
+
+        /* print error on anything else */
+        default:
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Relational expression parsed");
 
@@ -1074,7 +1147,21 @@ void relational_expression(void) {
  **********************************************************************/
 void primary_a_relational_expression_list(void) {
 
+    switch(lookahead.attribute.rel_op) {
 
+        case EQ:
+        case NE:
+        case GT:
+        case LT:
+            match(lookahead.code, lookahead.attribute.arr_op);
+            primary_a_relational_expression();
+            break;
+
+        /* print error on anything else */
+        default:
+            syn_printe();
+
+    }
 
     gen_incode("PLATY: Primary a relational expression list parsed");
 
@@ -1107,7 +1194,9 @@ void primary_s_relational_expression_list(void) {
             match(lookahead.code, lookahead.attribute.arr_op);
             primary_s_relational_expression();
             break;
-        default: /* print error on anything else */
+
+        /* print error on anything else */
+        default:
             syn_printe();
 
     }
@@ -1131,14 +1220,16 @@ void primary_s_relational_expression_list(void) {
  **********************************************************************/
 void primary_a_relational_expression(void) {
 
-    switch (lookahead.code) {
+    switch(lookahead.code) {
 
         case AVID_T:
         case FPL_T:
         case INL_T:
             match(lookahead.code, lookahead.attribute.rel_op);
             break;
-        default: /* print error on anything else */
+
+        /* print error on anything else */
+        default:
             syn_printe();
 
     }
@@ -1162,13 +1253,15 @@ void primary_a_relational_expression(void) {
  **********************************************************************/
 void primary_s_relational_expression(void) {
 
-    switch (lookahead.code) {
+    switch(lookahead.code) {
 
         case SVID_T:
         case STR_T:
             primary_string_expression();
             break;
-        default: /* print error on anything else */
+
+        /* print error on anything else */
+        default:
             syn_printe();
 
     }
