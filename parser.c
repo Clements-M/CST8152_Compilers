@@ -180,8 +180,7 @@ void match(int pr_token_code,int pr_token_attribute) {
 	if ( lookahead.code == SEOF_T )
 		return;
 
-	lookahead = mlwpar_next_token (sc_buf);
-	
+	lookahead = mlwpar_next_token (sc_buf);	
 	if( lookahead.code == ERR_T )
 	{
 			syn_printe();
@@ -220,26 +219,25 @@ void match(int pr_token_code,int pr_token_attribute) {
  **********************************************************************/
 void syn_eh(int sync_token_code){
 
-	/*Print the error and increment the error count*/
+	/*calls syn_printe() and increments the error counter*/
 	syn_printe();
-	synerrno++;
-
-	/*If we are looking for end of file, let's just leave early*/
-	if (sync_token_code == SEOF_T){
-		return;
-	}
+	++synerrno;
 
 	/*sync up the parser by finding the next occurence of sync token*/
-	while (lookahead.code != sync_token_code) {
-
+	while (lookahead.code != sync_token_code && lookahead.code != SEOF_T)
 		lookahead = mlwpar_next_token(sc_buf);
-		if (lookahead.code == SEOF_T){
-			exit(synerrno);
-		}
-	}
 
-	/*let's advance once more now that we know we are safe*/
-	lookahead = mlwpar_next_token(sc_buf);
+	/*function looks for sync_token_code different from SEOF_T
+	and reaches the end of the source file, the function calls exit(synerrno)*/
+	if ( sync_token_code != SEOF_T )
+		exit(synerrno);
+
+	/*matching token is not SEOF_T, the function advances the input token one more time */
+	if ( lookahead.code != SEOF_T )
+		lookahead = mlwpar_next_token(sc_buf);
+
+	/*while loop ensured that matching token is found and if match is SEOF_T breaks loop/gets to this point */
+
 }
 
 
