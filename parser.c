@@ -1418,6 +1418,7 @@ void relational_expression(void) {
 			/*gen_incode("PLATY: Relational expression parsed");*/
             break;
 
+
         /* print error on anything else */
         default:
             syn_printe();
