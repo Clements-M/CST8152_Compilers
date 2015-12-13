@@ -134,12 +134,6 @@ void parser(Buffer* in_buf) {
  *                      efficiency.
  **********************************************************************/
 void match(int pr_token_code,int pr_token_attribute) {
-	
-	printf("match lookahead att: %d\n", lookahead.attribute.rel_op);
-	printf("match lookahead code: %d\n", lookahead.code);
-
-	printf("match pr_token_code att: %d\n", pr_token_attribute);
-	printf("match pr_token_code code: %d\n", pr_token_code);
 
 	/*If the token code itself is not a match, no need to check attribute */
 	if ( pr_token_code != lookahead.code )
@@ -147,7 +141,7 @@ void match(int pr_token_code,int pr_token_attribute) {
 		syn_eh(pr_token_code);
 		return;
 	}
-	
+
 	/*Enter with matching code, check the 4 if the attribute is valid */
 	switch ( pr_token_code ) {
 	case KW_T:
@@ -158,7 +152,7 @@ void match(int pr_token_code,int pr_token_attribute) {
 		{
 			syn_eh(pr_token_code);
 			return;
-		}	
+		}
 		break;
 
 	}
@@ -170,14 +164,14 @@ void match(int pr_token_code,int pr_token_attribute) {
 
 
 	lookahead = mlwpar_next_token (sc_buf);
-	
+
 	if( lookahead.code == ERR_T )
 	{
 			syn_printe();
 			lookahead = mlwpar_next_token (sc_buf);
 			++synerrno;
 			return;
-	}	
+	}
 }
 
 
@@ -295,24 +289,24 @@ switch(t.code){
 	case STR_T:/* STR_T     6   String literal token */
 	        printf("%s\n",b_setmark(str_LTBL,t.attribute.str_offset));
 	break;
-        
+
         case SCC_OP_T: /* 7   String concatenation operator token */
 	        printf("NA\n" );
 	break;
-	
+
 	case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
 		printf("NA\n" );
 	break;
 	case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
-	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */ 
+	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
 	case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
-	
+
 	case  LPR_T: /*LPR_T    12  Left parenthesis token */
 		printf("NA\n" );
 	break;
@@ -325,17 +319,17 @@ switch(t.code){
 	case RBR_T: /*    15  Right brace token */
 	        printf("NA\n" );
 	break;
-		
+
 	case KW_T: /*     16   Keyword token */
 	        printf("%s\n",kw_table [t.attribute.get_int]);
 	break;
-	
+
 	case COM_T: /* 17   Comma token */
 	        printf("NA\n");
 	break;
 	case EOS_T: /*    18  End of statement *(semi - colon) */
 	        printf("NA\n" );
-	break; 		
+	break;
 	default:
 	        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
     }/*end switch*/
@@ -608,7 +602,7 @@ void statement(void) {
  * First set:           FIRST(<assignment_statement>) = {AVID_T, SVID_T}
  **********************************************************************/
 void assignment_statement(void) {
-	
+
     assignment_expression();
     match(EOS_T, NO_ATTR);
 	gen_incode("PLATY: Assignment statement parsed");
@@ -818,11 +812,12 @@ void variable_list(void) {
  * First set:           FIRST(<variable_identifier>) = {AVID_T, SVID_T}
  **********************************************************************/
 void variable_identifier(void) {
+
     switch(lookahead.code) {
 
         case AVID_T:
         case SVID_T:
-			match(lookahead.code, lookahead.attribute.arr_op); /*TODO*************/
+			match(lookahead.code, lookahead.attribute.arr_op);
             break;
 
         /* print error on anything else */
@@ -906,6 +901,7 @@ void output_list(void) {
         case SVID_T:
 			opt_variable_list();
 			return;
+
         case STR_T:
             match(lookahead.code, lookahead.attribute.arr_op);
 			gen_incode("PLATY: Output list (string literal) parsed");
@@ -1011,6 +1007,7 @@ void arithmetic_expression(void) {
 void unary_arithmetic_expression(void) {
 
     switch(lookahead.code) {
+
 		case ART_OP_T:
 			switch (lookahead.attribute.arr_op)
 			{
@@ -1108,8 +1105,6 @@ void multiplicative_arithmetic_expression(void) {
 
     primary_arithmetic_expression();
     multiplicative_arithmetic_expression_prime();
-
-    /*gen_incode("PLATY: Multiplicative arithmetic expression parsed");*/
 
 }
 
@@ -1212,8 +1207,6 @@ void string_expression(void) {
     primary_string_expression();
     string_expression_prime();
 
-    /*gen_incode("PLATY: String expression parsed");*/
-
 }
 
 
@@ -1241,6 +1234,7 @@ void string_expression_prime(void) {
     }
 
 	gen_incode("PLATY: String expression parsed");
+
 }
 
 
@@ -1268,7 +1262,6 @@ void primary_string_expression(void) {
         /* print error on anything else */
         default:
             syn_printe();
-            /*return;*/
 
     }
 
@@ -1334,10 +1327,12 @@ void logical_OR_expression_prime(void) {
 
     /* test for logical or operator token, do nothing if epsilon */
     if (lookahead.code == LOG_OP_T && lookahead.attribute.log_op == OR) {
+
         match(lookahead.code, lookahead.attribute.arr_op);
         logical_AND_expression();
         logical_OR_expression_prime();
 		gen_incode("PLATY: Logical OR expression parsed");
+
     }
 }
 
@@ -1378,10 +1373,12 @@ void logical_AND_expression_prime(void) {
 
     /* test for logical and operator token, do nothing if epsilon */
     if (lookahead.code == LOG_OP_T && lookahead.attribute.log_op == AND) {
+
 		match(lookahead.code, lookahead.attribute.arr_op);
 		relational_expression();
-		logical_AND_expression_prime();/*TODO: OMG THIS WAS NOT PRIME EARLIER!!!*/
+		logical_AND_expression_prime();
 		gen_incode("PLATY: Logical AND expression parsed");
+
     }
 }
 
@@ -1418,14 +1415,12 @@ void relational_expression(void) {
 			/*gen_incode("PLATY: Relational expression parsed");*/
             break;
 
-
         /* print error on anything else */
         default:
             syn_printe();
-            /*return;*/
 
     }
-	/*/printf("rel_ex code: %d\n", lookahead.code);*/
+	/* printf("rel_ex code: %d\n", lookahead.code);*/
     gen_incode("PLATY: Relational expression parsed");
 
 }
@@ -1462,9 +1457,12 @@ void primary_a_relational_expression_list(void) {
 			match(lookahead.code, lookahead.attribute.rel_op);
 			primary_a_relational_expression();
 			break;
+
 		default:
 			syn_printe();
+
 	}
+
 }
 
 
@@ -1499,6 +1497,7 @@ void primary_s_relational_expression_list(void) {
             match(lookahead.code, lookahead.attribute.rel_op);
             primary_s_relational_expression();
 			break;
+
 		default:
 			syn_printe();
 	}
@@ -1561,12 +1560,3 @@ void primary_s_relational_expression(void) {
 	gen_incode("PLATY: Primary s_relational expression parsed");
 
 }
-
-
-/*
-Step 8:
-    Build your parser incrementally, function by function. After adding a function, test the
-    parser thoroughly. Use your main program (modify one of the previous main programs)
-    to test the parser. The official main program and the test set for this assignment will be
-    provided in two weeks.
-*/

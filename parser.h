@@ -58,7 +58,6 @@
 #include "buffer.h"         /* comments */
 #include "stable.h"         /* comments */
 #include "token.h"          /* comments */
-/*#include "table.h"          /* comments */
 
 /* defines */
 #define ELSE        0       /* comments */
@@ -74,8 +73,8 @@
 /* extern definitions */
 extern Token mlwpar_next_token(Buffer* sc_buf);
 extern STD sym_table;
-extern int line;                /* line number counter */
-extern Buffer * str_LTBL;       /* string literal table */
+extern int line;                                        /* line number counter */
+extern Buffer * str_LTBL;                               /* string literal table */
 extern char * kw_table [];
 
 /* function prototypes */

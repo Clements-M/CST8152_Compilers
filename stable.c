@@ -164,7 +164,7 @@ int st_install(STD sym_table, char *lexeme, char type, int line){
 
             lex_length = strlen(sym_table.plsBD->cb_head + lex_offset);
 
-            //TODO: Change to buffer_setmark()
+            /* TODO: Change to buffer_setmark() */
             sym_table.pstvr[i].plex = sym_table.plsBD->cb_head + lex_offset;
 
             lex_offset += lex_length + 1;
