@@ -142,7 +142,7 @@ void match(int pr_token_code,int pr_token_attribute) {
 		syn_eh(pr_token_code);
 		return;
 	}
-	
+
 	/*Enter with matching code, check the 4 if the attribute is valid */
 	switch ( pr_token_code ) {
 	case KW_T:
@@ -150,28 +150,28 @@ void match(int pr_token_code,int pr_token_attribute) {
 		{
 			syn_eh(pr_token_code);
 			return;
-		}	
+		}
 		break;
 	case LOG_OP_T:
 		if( pr_token_attribute != lookahead.attribute.log_op)
 		{
 			syn_eh(pr_token_code);
 			return;
-		}	
+		}
 		break;
 	case ART_OP_T:
 		if( pr_token_attribute != lookahead.attribute.arr_op)
 		{
 			syn_eh(pr_token_code);
 			return;
-		}	
+		}
 		break;
 	case REL_OP_T:
 		if( pr_token_attribute != lookahead.attribute.rel_op)
 		{
 			syn_eh(pr_token_code);
 			return;
-		}	
+		}
 		break;
 	}
 	/* Matching code, and matching attribute at this point */
@@ -181,14 +181,14 @@ void match(int pr_token_code,int pr_token_attribute) {
 		return;
 
 	lookahead = mlwpar_next_token (sc_buf);
-	
+
 	if( lookahead.code == ERR_T )
 	{
 			syn_printe();
 			lookahead = mlwpar_next_token (sc_buf);
 			++synerrno;
 			return;
-	}	
+	}
 }
 
 
@@ -301,24 +301,24 @@ switch(t.code){
 	case STR_T:/* STR_T     6   String literal token */
 	        printf("%s\n",b_setmark(str_LTBL,t.attribute.str_offset));
 	break;
-        
+
         case SCC_OP_T: /* 7   String concatenation operator token */
 	        printf("NA\n" );
 	break;
-	
+
 	case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
 		printf("NA\n" );
 	break;
 	case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
-	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */ 
+	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
 	case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
 		printf("%d\n",t.attribute.get_int);
 	break;
-	
+
 	case  LPR_T: /*LPR_T    12  Left parenthesis token */
 		printf("NA\n" );
 	break;
@@ -331,17 +331,17 @@ switch(t.code){
 	case RBR_T: /*    15  Right brace token */
 	        printf("NA\n" );
 	break;
-		
+
 	case KW_T: /*     16   Keyword token */
 	        printf("%s\n",kw_table [t.attribute.get_int]);
 	break;
-	
+
 	case COM_T: /* 17   Comma token */
 	        printf("NA\n");
 	break;
 	case EOS_T: /*    18  End of statement *(semi - colon) */
 	        printf("NA\n" );
-	break; 		
+	break;
 	default:
 	        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
     }/*end switch*/
@@ -805,7 +805,7 @@ void input_statement(void) {
     match(RPR_T,NO_ATTR);
     match(EOS_T,NO_ATTR);
 
-    gen_incode("PLATY: Input statement parsed");
+    gen_incode("PLATY: INPUT statement parsed");
 
 }
 
