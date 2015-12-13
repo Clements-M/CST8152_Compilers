@@ -58,7 +58,7 @@
 #include "buffer.h"         /* comments */
 #include "stable.h"         /* comments */
 #include "token.h"          /* comments */
-/* #include "table.h" */         /* comments */
+/*#include "table.h"          /* comments */
 
 /* defines */
 #define ELSE        0       /* comments */

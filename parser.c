@@ -95,8 +95,7 @@ void parser(Buffer* in_buf) {
     lookahead = mlwpar_next_token(sc_buf);
     program();
     match(SEOF_T,NO_ATTR);
-    gen_incode("PLATY: Source file parsed");
-
+	gen_incode("PLATY: Source file parsed");
 }
 
 
@@ -135,6 +134,12 @@ void parser(Buffer* in_buf) {
  *                      efficiency.
  **********************************************************************/
 void match(int pr_token_code,int pr_token_attribute) {
+	
+	printf("match lookahead att: %d\n", lookahead.attribute.rel_op);
+	printf("match lookahead code: %d\n", lookahead.code);
+
+	printf("match pr_token_code att: %d\n", pr_token_attribute);
+	printf("match pr_token_code code: %d\n", pr_token_code);
 
 	/*If the token code itself is not a match, no need to check attribute */
 	if ( pr_token_code != lookahead.code )
@@ -146,41 +151,26 @@ void match(int pr_token_code,int pr_token_attribute) {
 	/*Enter with matching code, check the 4 if the attribute is valid */
 	switch ( pr_token_code ) {
 	case KW_T:
-		if( pr_token_attribute != lookahead.attribute.int_value)
-		{
-			syn_eh(pr_token_code);
-			return;
-		}	
-		break;
 	case LOG_OP_T:
-		if( pr_token_attribute != lookahead.attribute.log_op)
-		{
-			syn_eh(pr_token_code);
-			return;
-		}	
-		break;
 	case ART_OP_T:
-		if( pr_token_attribute != lookahead.attribute.arr_op)
-		{
-			syn_eh(pr_token_code);
-			return;
-		}	
-		break;
 	case REL_OP_T:
-		if( pr_token_attribute != lookahead.attribute.rel_op)
+		if( pr_token_attribute != lookahead.attribute.get_int)
 		{
 			syn_eh(pr_token_code);
 			return;
 		}	
 		break;
+
 	}
 	/* Matching code, and matching attribute at this point */
 
-	/*Successful match, now check if lookahead is SEOF */
+	/* Check if lookahead is SEOF */
 	if ( lookahead.code == SEOF_T )
 		return;
 
-	lookahead = mlwpar_next_token (sc_buf);	
+
+	lookahead = mlwpar_next_token (sc_buf);
+	
 	if( lookahead.code == ERR_T )
 	{
 			syn_printe();
@@ -224,20 +214,26 @@ void syn_eh(int sync_token_code){
 	++synerrno;
 
 	/*sync up the parser by finding the next occurence of sync token*/
-	while (lookahead.code != sync_token_code && lookahead.code != SEOF_T)
+	while ( lookahead.code != sync_token_code && lookahead.code != SEOF_T ) {
 		lookahead = mlwpar_next_token(sc_buf);
+	}
+	/*while loop ensured that matching token is found and if match is SEOF_T breaks loop/gets to this point */
+
+	/*matching token is found and the matching token is not SEOF_T,
+	 *the function advances the input token one more time and returns*/
+	if ( lookahead.code == sync_token_code ) {
+		if ( lookahead.code != SEOF_T ) {
+			lookahead = mlwpar_next_token(sc_buf);
+		}
+
+		return;
+	}
 
 	/*function looks for sync_token_code different from SEOF_T
 	and reaches the end of the source file, the function calls exit(synerrno)*/
-	if ( sync_token_code != SEOF_T )
+	if ( sync_token_code != SEOF_T ) {
 		exit(synerrno);
-
-	/*matching token is not SEOF_T, the function advances the input token one more time */
-	if ( lookahead.code != SEOF_T )
-		lookahead = mlwpar_next_token(sc_buf);
-
-	/*while loop ensured that matching token is found and if match is SEOF_T breaks loop/gets to this point */
-
+	}
 }
 
 
@@ -464,30 +460,24 @@ void program(void) {
  *                          <statements> | ϵ
  * First set:           FIRST(<opt_statements>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT, ϵ}
  **********************************************************************/
-void opt_statements() {
-
-    switch(lookahead.code) {
-
-        case AVID_T:
-        case SVID_T:
-            statements();
-            break;
-
-        case KW_T:
-            /* check for PLATYPUS, ELSE, THEN, REPEAT here and in statements_p() */
-            switch (lookahead.attribute.kwt_idx) {
-                case PLATYPUS:
-                case ELSE:
-                case THEN:
-                case REPEAT:
-                    statements();
-                    break;
-            }
-
-    }
-
-    gen_incode("PLATY: Opt_statements parsed");
-
+void opt_statements(void){
+/* FIRST set: {AVID_T,SVID_T,KW_T(but not … see above),e} */
+	switch(lookahead.code){
+		case AVID_T:
+		case SVID_T: statements();break;
+		case KW_T:
+			/* check for PLATYPUS, ELSE, THEN, REPEAT here and in
+			statements_p()*/
+			if (lookahead. attribute. get_int != PLATYPUS
+			&& lookahead. attribute. get_int != ELSE
+			&& lookahead. attribute. get_int != THEN
+			&& lookahead. attribute. get_int != REPEAT){
+				statements();
+				break;
+			}
+		default: /*empty string – optional statements*/ ;
+			gen_incode("PLATY: Opt_statements parsed");
+	}
 }
 
 
@@ -507,9 +497,6 @@ void statements(void) {
 
     statement();
     statement_prime();
-
-    gen_incode("PLATY: Statements parsed");
-
 }
 
 
@@ -550,10 +537,6 @@ void statement_prime(void) {
             statement_prime();
             break;
     }
-
-    /* print even if epsilon */
-    gen_incode("PLATY: Statement prime parsed");
-
 }
 
 
@@ -571,7 +554,6 @@ void statement_prime(void) {
  * First set:           FIRST(<statement>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
  **********************************************************************/
 void statement(void) {
-
     switch(lookahead.code) {
 
         case AVID_T:
@@ -610,9 +592,6 @@ void statement(void) {
             syn_printe();
             return;
     }
-
-    gen_incode("PLATY: Statement parsed");
-
 }
 
 
@@ -629,12 +608,10 @@ void statement(void) {
  * First set:           FIRST(<assignment_statement>) = {AVID_T, SVID_T}
  **********************************************************************/
 void assignment_statement(void) {
-
+	
     assignment_expression();
     match(EOS_T, NO_ATTR);
-
-    gen_incode("PLATY: Assignment statement parsed");
-
+	gen_incode("PLATY: Assignment statement parsed");
 }
 
 
@@ -658,12 +635,14 @@ void assignment_expression(void) {
             match(SVID_T, NO_ATTR);
             match(ASS_OP_T, NO_ATTR);
             string_expression();
+			gen_incode("PLATY: Assignment expression (string) parsed");
             break;
 
         case AVID_T:
             match(AVID_T, NO_ATTR);
             match(ASS_OP_T, NO_ATTR);
             arithmetic_expression();
+			gen_incode("PLATY: Assignment expression (arithmetic) parsed");
             break;
 
         /* print error on anything else */
@@ -672,9 +651,6 @@ void assignment_expression(void) {
             return;
 
     }
-
-    gen_incode("PLATY: Assignment expression parsed");
-
 }
 
 
@@ -705,7 +681,7 @@ void selection_statement(void) {
     match(RBR_T, NO_ATTR);
     match(EOS_T, NO_ATTR);
 
-    gen_incode("PLATY: Selection statement parsed");
+    gen_incode("PLATY: IF statement parsed");
 
 }
 
@@ -739,7 +715,7 @@ void iteration_statement(void) {
     match(RBR_T, NO_ATTR);
     match(EOS_T, NO_ATTR);
 
-    gen_incode("PLATY: Iteration statement parsed");
+    gen_incode("PLATY: USING statement parsed");
 
 }
 
@@ -803,7 +779,7 @@ void input_statement(void) {
     match(RPR_T,NO_ATTR);
     match(EOS_T,NO_ATTR);
 
-    gen_incode("PLATY: Input statement parsed");
+    gen_incode("PLATY: INPUT statement parsed");
 
 }
 
@@ -846,7 +822,7 @@ void variable_identifier(void) {
 
         case AVID_T:
         case SVID_T:
-            match(lookahead.code, NO_ATTR);
+			match(lookahead.code, lookahead.attribute.arr_op); /*TODO*************/
             break;
 
         /* print error on anything else */
@@ -881,9 +857,6 @@ void variable_list_prime(void) {
         variable_list_prime();
 
     }
-
-    gen_incode("PLATY: Variable list prime parsed");
-
 }
 
 
@@ -907,7 +880,7 @@ void output_statement(void) {
     match(RPR_T, NO_ATTR);
     match(EOS_T, NO_ATTR);
 
-    gen_incode("PLATY: Output statement parsed");
+    gen_incode("PLATY: OUTPUT statement parsed");
 
 }
 
@@ -931,13 +904,16 @@ void output_list(void) {
 
         case AVID_T:
         case SVID_T:
+			opt_variable_list();
+			return;
         case STR_T:
-            variable_list();
-            break;
+            match(lookahead.code, lookahead.attribute.arr_op);
+			gen_incode("PLATY: Output list (string literal) parsed");
+			return;
 
     }
 
-    gen_incode("PLATY: Output list parsed");
+    gen_incode("PLATY: Output list (empty) parsed");
 
 }
 
@@ -961,10 +937,8 @@ void opt_variable_list(void) {
 
         case AVID_T:
         case SVID_T:
-        case STR_T:
-            variable_list();
-            break;
-
+			variable_list();
+			return;
     }
 
     gen_incode("PLATY: Optional variable list parsed");
@@ -990,7 +964,7 @@ void arithmetic_expression(void) {
 
         case ART_OP_T:
             switch(lookahead.attribute.arr_op) {
-
+				gen_incode("EnterARTOPSW");
                 case MINUS:
                 case PLUS:
                     unary_arithmetic_expression();
@@ -1002,7 +976,7 @@ void arithmetic_expression(void) {
                     return;
 
             }
-
+			break;
         case AVID_T:
         case FPL_T:
         case INL_T:
@@ -1037,22 +1011,27 @@ void arithmetic_expression(void) {
 void unary_arithmetic_expression(void) {
 
     switch(lookahead.code) {
-
-        case MINUS:
-        case PLUS:
-            match(lookahead.code, lookahead.attribute.arr_op);
-            primary_arithmetic_expression();
-            break;
-
+		case ART_OP_T:
+			switch (lookahead.attribute.arr_op)
+			{
+				case MINUS:
+				case PLUS:
+					match(lookahead.code, lookahead.attribute.arr_op);
+					primary_arithmetic_expression();
+					gen_incode("PLATY: Unary arithmetic expression parsed");
+					break;
+				/* print error on anything else */
+				default:
+					syn_printe();
+					return;
+			}
+			break;
         /* print error on anything else */
         default:
             syn_printe();
             return;
 
     }
-
-    gen_incode("PLATY: Unary arithmetic expression parsed");
-
 }
 
 
@@ -1072,9 +1051,6 @@ void additive_arithmetic_expression(void) {
 
     multiplicative_arithmetic_expression();
     additive_arithmetic_expression_prime();
-
-    gen_incode("PLATY: Additive arithmetic expression parsed");
-
 }
 
 
@@ -1104,18 +1080,15 @@ void additive_arithmetic_expression_prime(void) {
                 match(lookahead.code, lookahead.attribute.arr_op);
                 multiplicative_arithmetic_expression();
                 additive_arithmetic_expression_prime();
+				gen_incode("PLATY: Additive arithmetic expression parsed");
+				break;
 
-                gen_incode("PLATY: Additive arithmetic expression prime parsed");
-
-            /* print error on anything else */
             default:
-                syn_printe();
                 return;
 
         }
 
     }
-
 }
 
 
@@ -1136,7 +1109,7 @@ void multiplicative_arithmetic_expression(void) {
     primary_arithmetic_expression();
     multiplicative_arithmetic_expression_prime();
 
-    gen_incode("PLATY: Multiplicative arithmetic expression parsed");
+    /*gen_incode("PLATY: Multiplicative arithmetic expression parsed");*/
 
 }
 
@@ -1167,12 +1140,12 @@ void multiplicative_arithmetic_expression_prime(void) {
                 match(lookahead.code, lookahead.attribute.arr_op);
                 primary_arithmetic_expression();
                 multiplicative_arithmetic_expression_prime();
-
-                gen_incode("PLATY: Multiplicative arithmetic expression prime parsed");
+				gen_incode("PLATY: Multiplicative arithmetic expression parsed");
+				break;
 
             /* print error on anything else */
             default:
-                syn_printe();
+                /*syn_printe();*/
                 return;
 
         }
@@ -1239,7 +1212,7 @@ void string_expression(void) {
     primary_string_expression();
     string_expression_prime();
 
-    gen_incode("PLATY: String expression parsed");
+    /*gen_incode("PLATY: String expression parsed");*/
 
 }
 
@@ -1264,12 +1237,10 @@ void string_expression_prime(void) {
         match(lookahead.code, lookahead.attribute.arr_op);
         primary_string_expression();
         string_expression_prime();
-
+		return;
     }
 
-    /* print string parsed even if string is empty */
-    gen_incode("PLATY: String expression prime parsed");
-
+	gen_incode("PLATY: String expression parsed");
 }
 
 
@@ -1297,7 +1268,7 @@ void primary_string_expression(void) {
         /* print error on anything else */
         default:
             syn_printe();
-            return;
+            /*return;*/
 
     }
 
@@ -1344,8 +1315,6 @@ void logical_OR_expression(void) {
     logical_AND_expression();
     logical_OR_expression_prime();
 
-    gen_incode("PLATY: Logical OR expression parsed");
-
 }
 
 
@@ -1363,28 +1332,13 @@ void logical_OR_expression(void) {
  **********************************************************************/
 void logical_OR_expression_prime(void) {
 
-    /* test for logical operator token, do nothing if epsilon */
-    if (lookahead.code == LOG_OP_T) {
-
-        switch(lookahead.attribute.log_op) {
-
-            case OR:
-                match(lookahead.code, lookahead.attribute.arr_op);
-                logical_AND_expression();
-                logical_OR_expression_prime();
-                break;
-
-            /* print error on anything else */
-            default:
-                syn_printe();
-                return;
-
-        }
-
-        gen_incode("PLATY: Logical OR expression prime parsed");
-
+    /* test for logical or operator token, do nothing if epsilon */
+    if (lookahead.code == LOG_OP_T && lookahead.attribute.log_op == OR) {
+        match(lookahead.code, lookahead.attribute.arr_op);
+        logical_AND_expression();
+        logical_OR_expression_prime();
+		gen_incode("PLATY: Logical OR expression parsed");
     }
-
 }
 
 
@@ -1405,8 +1359,6 @@ void logical_AND_expression(void) {
     relational_expression();
     logical_AND_expression_prime();
 
-    gen_incode("PLATY: Logical AND expression parsed");
-
 }
 
 
@@ -1424,28 +1376,13 @@ void logical_AND_expression(void) {
  **********************************************************************/
 void logical_AND_expression_prime(void) {
 
-    /* test for logical operator token, do nothing if epsilon */
-    if (lookahead.code == LOG_OP_T) {
-
-        switch(lookahead.attribute.log_op) {
-
-            case AND:
-                match(lookahead.code, lookahead.attribute.arr_op);
-                relational_expression();
-                logical_AND_expression();
-                break;
-
-            /* print error on anything else */
-            default:
-                syn_printe();
-                return;
-
-        }
-
-        gen_incode("PLATY: Logical AND expression prime parsed");
-
+    /* test for logical and operator token, do nothing if epsilon */
+    if (lookahead.code == LOG_OP_T && lookahead.attribute.log_op == AND) {
+		match(lookahead.code, lookahead.attribute.arr_op);
+		relational_expression();
+		logical_AND_expression_prime();/*TODO: OMG THIS WAS NOT PRIME EARLIER!!!*/
+		gen_incode("PLATY: Logical AND expression parsed");
     }
-
 }
 
 
@@ -1471,21 +1408,23 @@ void relational_expression(void) {
         case INL_T:
             primary_a_relational_expression();
             primary_a_relational_expression_list();
+			/*gen_incode("PLATY: Relational expression parsed");*/
             break;
 
         case SVID_T:
         case STR_T:
             primary_s_relational_expression();
             primary_s_relational_expression_list();
+			/*gen_incode("PLATY: Relational expression parsed");*/
             break;
 
         /* print error on anything else */
         default:
             syn_printe();
-            return;
+            /*return;*/
 
     }
-
+	/*/printf("rel_ex code: %d\n", lookahead.code);*/
     gen_incode("PLATY: Relational expression parsed");
 
 }
@@ -1508,25 +1447,23 @@ void relational_expression(void) {
  **********************************************************************/
 void primary_a_relational_expression_list(void) {
 
-    switch(lookahead.attribute.rel_op) {
+	if ( lookahead.code != REL_OP_T ) {
+		syn_printe();
+		return;
+	}
 
-        case EQ:
-        case NE:
-        case GT:
-        case LT:
-            match(lookahead.code, lookahead.attribute.arr_op);
-            primary_a_relational_expression();
-            break;
+	switch(lookahead.attribute.rel_op) {
 
-        /* print error on anything else */
-        default:
-            syn_printe();
-            return;
-
-    }
-
-    gen_incode("PLATY: Primary a relational expression list parsed");
-
+		case EQ:
+		case NE:
+		case GT:
+		case LT:
+			match(lookahead.code, lookahead.attribute.rel_op);
+			primary_a_relational_expression();
+			break;
+		default:
+			syn_printe();
+	}
 }
 
 
@@ -1547,25 +1484,23 @@ void primary_a_relational_expression_list(void) {
  **********************************************************************/
 void primary_s_relational_expression_list(void) {
 
+	if ( lookahead.code != REL_OP_T ) {
+		syn_printe();
+		return;
+	}
+
     switch(lookahead.attribute.rel_op) {
 
         case EQ:
         case NE:
         case GT:
         case LT:
-            match(lookahead.code, lookahead.attribute.arr_op);
+            match(lookahead.code, lookahead.attribute.rel_op);
             primary_s_relational_expression();
-            break;
-
-        /* print error on anything else */
-        default:
-            syn_printe();
-            return;
-
-    }
-
-    gen_incode("PLATY: Primary s relational expression list parsed");
-
+			break;
+		default:
+			syn_printe();
+	}
 }
 
 
@@ -1588,17 +1523,20 @@ void primary_a_relational_expression(void) {
         case AVID_T:
         case FPL_T:
         case INL_T:
-            match(lookahead.code, lookahead.attribute.rel_op);
+			/*printf("a relational 1 code: %d\n", lookahead.code);*/
+			match(lookahead.code, lookahead.attribute.vid_offset);
+
+			/*printf("a relational 2 code: %d\n", lookahead.code);*/
             break;
 
         /* print error on anything else */
         default:
             syn_printe();
-            return;
+            /*return;*/
 
     }
 
-    gen_incode("PLATY: Primary a relational expression parsed");
+    gen_incode("PLATY: Primary a_relational expression parsed");
 
 }
 
@@ -1617,21 +1555,9 @@ void primary_a_relational_expression(void) {
  **********************************************************************/
 void primary_s_relational_expression(void) {
 
-    switch(lookahead.code) {
+	primary_string_expression();
 
-        case SVID_T:
-        case STR_T:
-            primary_string_expression();
-            break;
-
-        /* print error on anything else */
-        default:
-            syn_printe();
-            return;
-
-    }
-
-    gen_incode("PLATY: Primary s relational expression parsed");
+	gen_incode("PLATY: Primary s_relational expression parsed");
 
 }
 
