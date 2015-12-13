@@ -1,0 +1,26 @@
+#!/bin/bash
+#Standard Tests
+
+#Test 1. The file ass4ai.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4e.pls > ass4e.out
+
+#Test 2. The file ass4mi.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4r.pls > ass4r.out
+
+#Test 3. The file ass4fi.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4w1.pls > assw1e.out
+
+#Test 4. The file ass4e.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4w2.pls > ass4w2.out
+
+#Test 5. The file ass4e.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4w3.pls > ass4w3.out
+
+#Test 6. The file ass4e.out is produced by the following command line
+
+valgrind ./2015F_CST8152_ASS04 ass4w4.pls > ass4w4.out
