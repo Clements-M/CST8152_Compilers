@@ -55,27 +55,29 @@
 #define PARSER_H_
 
 /* header includes */
-#include "buffer.h"         /* comments */
-#include "stable.h"         /* comments */
-#include "token.h"          /* comments */
+#include "buffer.h"
+#include "stable.h"
+#include "token.h"
 
-/* defines */
-#define ELSE        0       /* comments */
-#define IF          1       /* comments */
-#define INPUT       2       /* comments */
-#define OUTPUT      3       /* comments */
-#define PLATYPUS    4       /* comments */
-#define REPEAT      5       /* comments */
-#define THEN        6       /* comments */
-#define USING       7       /* comments */
-#define NO_ATTR     0       /* comments */
+/* keyword defines */
+#define ELSE        0
+#define IF          1
+#define INPUT       2
+#define OUTPUT      3
+#define PLATYPUS    4
+#define REPEAT      5
+#define THEN        6
+#define USING       7
+
+/* no attribute define */
+#define NO_ATTR    -1
 
 /* extern definitions */
-extern Token mlwpar_next_token(Buffer* sc_buf);
-extern STD sym_table;
-extern int line;                                        /* line number counter */
-extern Buffer * str_LTBL;                               /* string literal table */
-extern char * kw_table [];
+extern Token mlwpar_next_token(Buffer* sc_buf);         /* external scanner declaration */
+extern STD sym_table;                                   /* external symbol table declaration */
+extern int line;                                        /* external line number counter declaration */
+extern Buffer* str_LTBL;                                /* external string table buffer pointer declaration */
+extern char* kw_table [];                               /* external keyword table string declaration */
 
 /* function prototypes */
 void parser(Buffer* in_buf);                            /* creates a Buffer structure and sets values with given parameters */
@@ -84,41 +86,41 @@ void syn_eh(int sync_token_code);                       /* implements a simple p
 void syn_printe();                                      /* prints error messages */
 void gen_incode(char* incode);                          /* assignment the function takes a string as an argument and prints it */
 
-void program(void);                                     /* comments */
-void opt_statements(void);                              /* comments */
-void statement_prime(void);                             /* comments */
-void statements(void);                                  /* comments */
-void statement(void);                                   /* comments */
-void assignment_statement(void);                        /* comments */
-void assignment_expression(void);                       /* comments */
-void selection_statement(void);                         /* comments */
-void iteration_statement(void);                         /* comments */
-void input_statement(void);                             /* comments */
-void variable_list(void);                               /* comments */
-void variable_list_prime(void);                         /* comments */
-void output_statement(void);                            /* comments */
-void output_list(void);                                 /* comments */
-void variable_identifier(void);
-void opt_variable_list(void);                           /* comments */
-void arithmetic_expression(void);                       /* comments */
-void unary_arithmetic_expression(void);                 /* comments */
-void additive_arithmetic_expression(void);              /* comments */
-void additive_arithmetic_expression_prime(void);        /* comments */
-void multiplicative_arithmetic_expression(void);        /* comments */
-void multiplicative_arithmetic_expression_prime(void);  /* comments */
-void primary_arithmetic_expression(void);               /* comments */
-void string_expression(void);                           /* comments */
-void string_expression_prime(void);                     /* comments */
-void primary_string_expression(void);                   /* comments */
-void conditional_expression(void);                      /* comments */
-void logical_OR_expression(void);                       /* comments */
-void logical_OR_expression_prime(void);                 /* comments */
-void logical_AND_expression(void);                      /* comments */
-void logical_AND_expression_prime(void);                /* comments */
-void relational_expression(void);                       /* comments */
-void primary_a_relational_expression_list(void);        /* comments */
-void primary_s_relational_expression_list(void);        /* comments */
-void primary_a_relational_expression(void);             /* comments */
-void primary_s_relational_expression(void);             /* comments */
+void program(void);                                     /* parses program */
+void opt_statements(void);                              /* parses optional statements */
+void statement_prime(void);                             /* parses statements prime */
+void statements(void);                                  /* parses statements */
+void statement(void);                                   /* parses statement */
+void assignment_statement(void);                        /* parses assignment statement */
+void assignment_expression(void);                       /* parses assignment expression */
+void selection_statement(void);                         /* parses selection statement */
+void iteration_statement(void);                         /* parses iteration statement */
+void input_statement(void);                             /* parses input statement */
+void variable_list(void);                               /* parses variable list */
+void variable_list_prime(void);                         /* parses variable list prime */
+void output_statement(void);                            /* parses output statement */
+void output_list(void);                                 /* parses output list */
+void variable_identifier(void);                         /* parses variable identifier */
+void opt_variable_list(void);                           /* parses optional variable list */
+void arithmetic_expression(void);                       /* parses arithmetic expression */
+void unary_arithmetic_expression(void);                 /* parses uniry arithmetic expression */
+void additive_arithmetic_expression(void);              /* parses additive arithmetic expression */
+void additive_arithmetic_expression_prime(void);        /* parses additive arithmetic expression prime */
+void multiplicative_arithmetic_expression(void);        /* parses multiplicative arithmetic expression */
+void multiplicative_arithmetic_expression_prime(void);  /* parses multiplicative arithmetic expression prime */
+void primary_arithmetic_expression(void);               /* parses primary arithmetic expression */
+void string_expression(void);                           /* parses string expression */
+void string_expression_prime(void);                     /* parses string expression prime */
+void primary_string_expression(void);                   /* parses primary string expression */
+void conditional_expression(void);                      /* parses conditional expression */
+void logical_OR_expression(void);                       /* parses logical OR expression */
+void logical_OR_expression_prime(void);                 /* parses logical OR expression prime */
+void logical_AND_expression(void);                      /* parses logical AND expression */
+void logical_AND_expression_prime(void);                /* parses logical AND expression prime */
+void relational_expression(void);                       /* parses relational expression */
+void primary_a_relational_expression_list(void);        /* parses primary a relational expression list */
+void primary_s_relational_expression_list(void);        /* parses primary s relational expression list */
+void primary_a_relational_expression(void);             /* parses primary a relational expression */
+void primary_s_relational_expression(void);             /* parses primary s relational expression */
 
 #endif /* PARSER_H_ */

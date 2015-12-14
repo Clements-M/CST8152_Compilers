@@ -57,22 +57,10 @@
 
 #include "parser.h"
 
-/*
-    Define two static global variables: lookahead of type
-    Token, and sc_buf of type pointer to Buffer. Additionally define a global variable
-    synerrno of type int. You may add additional variable declarations and constants
-    definitions, if necessary (and it is).
-
-    Then declare the functions used in the parser
-    implementation. All function prototypes, variable definitions/declarations, and constant
-    definitions must be in parser.h.
-*/
-
 /* global variables */
-static Token lookahead;        /* look ahead token to match with ... */
+static Token lookahead;        /* to match look ahead token */
 static Buffer* sc_buf;         /* a pointer to a buffer for the source file */
 int    synerrno;               /* for error counting */
-
 
 /***********************************************************************
  * Purpose:             creates a Buffer structure and sets values with given parameters
@@ -101,7 +89,8 @@ void parser(Buffer* in_buf) {
 
 /***********************************************************************
  * Purpose:             matches the current input token (lookahead) and the token required by the parser
- * Author:              Cory Hilliard
+ * Author:              Cory Hilliard    040 630 141
+ *                      Matthew Clements 040 766 220
  * History/Versions:    1.0
  * Called functions:    malloc()
  *                      free()
@@ -111,8 +100,7 @@ void parser(Buffer* in_buf) {
  *                                              (addative: 1 to 255)
  *                      o_mode:         char    (f, a, m)
  * Return value:        none
- * Algorithm:           Step 3:
- *                      Write your match() function. The prototype for the function is:
+ * Algorithm:           Write your match() function. The prototype for the function is:
  *                      The match() function matches two tokens: the current input token (lookahead) and the
  *                      token required by the parser. The token required by the parser is represented by two
  *                      integers - the token code (pr_token_code), and the token attribute
@@ -171,24 +159,21 @@ void match(int pr_token_code,int pr_token_attribute) {
 			lookahead = mlwpar_next_token (sc_buf);
 			++synerrno;
 			return;
+
 	}
 }
 
 
 /***********************************************************************
  * Purpose:             implements a simple panic mode error recovery.
- * Author:
+ * Author:              Matthew Clements 040 766 220
  * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
+ * Called functions:    syn_printe()
+ *                      mlwpar_next_token()
+ *                      exit()
+ * Parameters:          sync_token_code int (0 - 18)
  * Return value:        pointer to Buffer
- * Algorithm:           Step 4:
- * First set:           FIRST, the function calls syn_printe() and increments the error counter. Then the
+ * Algorithm:           FIRST, the function calls syn_printe() and increments the error counter. Then the
  *                      function implements a panic mode error recovery: the function advances the input token
  *                      (lookahead) until it finds a token code matching the one required by the parser
  *                      (pr_token_code passed to the function as sync_token_code ).
@@ -228,18 +213,18 @@ void syn_eh(int sync_token_code){
 	if ( sync_token_code != SEOF_T ) {
 		exit(synerrno);
 	}
+
 }
 
 
 /***********************************************************************
- * Purpose:             Parser error printing function, Assignmet 4, F15
+ * Purpose:             Parser error printing function
  * Author:              King Svillen Ranev of the round table
  * History/Versions:    1.0
  * Called functions:    printf()
  *                      b_setmark()
  * Parameters:          none
- * Algorithm:           Step 5:
- *                      Write the error printing function syn_printe() .
+ * Algorithm:           Write the error printing function syn_printe() .
  *                      void syn_printe()
  *                      Note: This function implementation is provided for you in Assignment4MPTF.zip.
  *
@@ -262,78 +247,71 @@ void syn_eh(int sync_token_code){
  *                      Similarly, you must use the symbol table or the string literal table to print the variable
  *                      names or the sting literals.
  **********************************************************************/
-/* Parser error printing function, Assignmet 4, F15
- */
 void syn_printe(){
 Token t = lookahead;
 
 printf("PLATY: Syntax error:  Line:%3d\n",line);
 printf("*****  Token code:%3d Attribute: ", t.code);
-switch(t.code){
-	case  ERR_T: /* ERR_T     0   Error token */
-		printf("%s\n",t.attribute.err_lex);
-	 break;
-	case  SEOF_T: /*SEOF_T    1   Source end-of-file token */
-		printf("NA\n" );
-	 break;
-	case  AVID_T: /* AVID_T    2   Arithmetic Variable identifier token */
-	case  SVID_T :/* SVID_T    3  String Variable identifier token */
-		printf("%s\n",sym_table.pstvr[t.attribute.get_int].plex);
-	 break;
-	case  FPL_T: /* FPL_T     4  Floating point literal token */
-		printf("%5.1f\n",t.attribute.flt_value);
-	 break;
-	case INL_T: /* INL_T      5   Integer literal token */
-	        printf("%d\n",t.attribute.get_int);
-	 break;
-	case STR_T:/* STR_T     6   String literal token */
-	        printf("%s\n",b_setmark(str_LTBL,t.attribute.str_offset));
-	break;
-
-        case SCC_OP_T: /* 7   String concatenation operator token */
-	        printf("NA\n" );
-	break;
-
-	case  ASS_OP_T:/* ASS_OP_T  8   Assignment operator token */
-		printf("NA\n" );
-	break;
-	case  ART_OP_T:/* ART_OP_T  9   Arithmetic operator token */
-		printf("%d\n",t.attribute.get_int);
-	break;
-	case  REL_OP_T: /*REL_OP_T  10   Relational operator token */
-		printf("%d\n",t.attribute.get_int);
-	break;
-	case  LOG_OP_T:/*LOG_OP_T 11  Logical operator token */
-		printf("%d\n",t.attribute.get_int);
-	break;
-
-	case  LPR_T: /*LPR_T    12  Left parenthesis token */
-		printf("NA\n" );
-	break;
-	case  RPR_T: /*RPR_T    13  Right parenthesis token */
-	        printf("NA\n" );
-	break;
-	case LBR_T: /*    14   Left brace token */
-	        printf("NA\n" );
-	break;
-	case RBR_T: /*    15  Right brace token */
-	        printf("NA\n" );
-	break;
-
-	case KW_T: /*     16   Keyword token */
-	        printf("%s\n",kw_table [t.attribute.get_int]);
-	break;
-
-	case COM_T: /* 17   Comma token */
-	        printf("NA\n");
-	break;
-	case EOS_T: /*    18  End of statement *(semi - colon) */
-	        printf("NA\n" );
-	break;
-	default:
-	        printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
-    }/*end switch*/
-}/* end syn_printe()*/
+    switch(t.code){
+        case ERR_T:                 /* ERR_T     0  Error token */
+            printf("%s\n",t.attribute.err_lex);
+            break;
+        case SEOF_T:                /* SEOF_T    1  Source end-of-file token */
+            printf("NA\n" );
+            break;
+        case AVID_T:                /* AVID_T    2  Arithmetic Variable identifier token */
+        case SVID_T :               /* SVID_T    3  String Variable identifier token */
+            printf("%s\n",sym_table.pstvr[t.attribute.get_int].plex);
+            break;
+        case FPL_T:                 /* FPL_T     4  Floating point literal token */
+            printf("%5.1f\n",t.attribute.flt_value);
+            break;
+        case INL_T:                 /* INL_T     5  Integer literal token */
+            printf("%d\n",t.attribute.get_int);
+            break;
+        case STR_T:                 /* STR_T     6  String literal token */
+            printf("%s\n",b_setmark(str_LTBL,t.attribute.str_offset));
+            break;
+        case SCC_OP_T:              /* SCC_OP_T  7  String concatenation operator token */
+            printf("NA\n" );
+            break;
+        case ASS_OP_T:              /* ASS_OP_T  8  Assignment operator token */
+            printf("NA\n" );
+            break;
+        case ART_OP_T:              /* ART_OP_T  9  Arithmetic operator token */
+            printf("%d\n",t.attribute.get_int);
+            break;
+        case REL_OP_T:              /* REL_OP_T 10  Relational operator token */
+            printf("%d\n",t.attribute.get_int);
+            break;
+        case LOG_OP_T:              /* LOG_OP_T 11  Logical operator token */
+            printf("%d\n",t.attribute.get_int);
+            break;
+        case LPR_T:                 /* LPR_T    12  Left parenthesis token */
+            printf("NA\n" );
+            break;
+        case RPR_T:                 /* RPR_T    13  Right parenthesis token */
+            printf("NA\n" );
+            break;
+        case LBR_T:                 /* LBR_T    14  Left brace token */
+            printf("NA\n" );
+            break;
+        case RBR_T:                 /* RBR_T    15  Right brace token */
+            printf("NA\n" );
+            break;
+        case KW_T:                  /* KW_T     16  Keyword token */
+            printf("%s\n",kw_table [t.attribute.get_int]);
+            break;
+        case COM_T:                 /* COM_T    17  Comma token */
+            printf("NA\n");
+            break;
+        case EOS_T:                 /* EOS_T    18  End of statement *(semi - colon) */
+            printf("NA\n" );
+            break;
+        default:
+            printf("PLATY: Scanner error: invalid token code: %d\n", t.code);
+    } /* end switch */
+} /* end syn_printe() */
 
 
 /***********************************************************************
@@ -360,29 +338,6 @@ void gen_incode(char* incode){
 }
 
 
-/***********************************************************************
- * Purpose:             assignment the function takes a string as an argument and prints it
- * Author:              King Svillen Ranev of the round table
- * History/Versions:    1.0
- * Called functions:    malloc()
- *                      free()
- *                      calloc()
- * Parameters:          init_capacity:  short   (ZERO to SHRT_MAX)
- *                      inc_factor:     char    (multiplicative: MIN_RANGE_1 to MAX_RANGE_100)
- *                                              (addative: 1 to 255)
- *                      o_mode:         char    (f, a, m)
- * Return value:        pointer to Buffer
- * Algorithm:           Step 7:
- *                      For each of your grammar productions write a function named after the name of the
- *                      production. For example:
- *                      void program(void){
- *                          match(KW_T,PLATYPUS);match(LBR_T,NO_ATTR);opt_statements();
- *                          match(RBR_T,NO_ATTR);
- *                          gen_incode("PLATY: Program parsed");
- *                      }
- *                      Writing a production function, follow the substeps below.
- **********************************************************************/
-
  /***********************************************************************
  * Purpose:             for parsing program
  * Author:              King Svillen Ranev of the round table
@@ -405,44 +360,6 @@ void program(void) {
 }
 
 
-/***********************************************************************
- * Purpose:             assignment the function takes a string as an argument and prints it
- * Algorithm:           Step 7.2:
- *                      If a production has more than one alternatives on the right side (even if one of them is
- *                      empty), you must use the FIRST set for the production.
- *                      For example, the FIRST set for the <opt_statements> production is: { KW_T (but not
- *                      PLATYPUS, ELSE, THEN, REPEAT), AVID_T, SVID_T, and ϵ.
- *                      Here is an example how the FIRST set is used to write a function for a production:
- *                      void opt_statements(){
- *                          FIRST set: {AVID_T,SVID_T,KW_T(but not ... see above),ϵ}
- *
- *                          switch(lookahead.code){
- *                              case AVID_T:
- *                              case SVID_T: statements();break;
- *                              case KW_T:
- *                                  check for PLATYPUS, ELSE, THEN, REPEAT here and in statements_p()
- *                          if (lookahead. attribute. get_int != PLATYPUS
- *                              && lookahead. attribute. get_int != ELSE
- *                              && lookahead. attribute. get_int != THEN
- *                              && lookahead. attribute. get_int != REPEAT){
- *                                  statements();
- *                                  break;
- *                          }
- *
- *                              default: empty string – optional statements ;
- *                              gen_incode("PLATY: Opt_statements parsed");
- *                          }
- *                      }
- *
- *                      Pay special attention to the implementation of the empty string. If you do not have an
- *                      empty string in your production, you must call the syn_printe() function at that point .
- *                      IMPORTANT NOTE: You are not allowed to call the error handling function syn_eh()
- *                      inside the production functions and you are not allowed to advance the lookahead
- *                      within the production functions as well. Only match() can call syn_eh(), and only
- *                      match() and syn_eh() can advance lookahead.
- *                      ANOTHER NOTE: Each function must contain a line in its header indicating the
- *                      production it implements and the FIRST set for that production (see above).
- **********************************************************************/
 /***********************************************************************
  * Purpose:             for parsing opt_statements
  * Author:              King Svillen Ranev of the round table
@@ -491,6 +408,7 @@ void statements(void) {
 
     statement();
     statement_prime();
+
 }
 
 
@@ -519,7 +437,7 @@ void statement_prime(void) {
                 case OUTPUT:
                     break;
 
-                /* any other keyword */
+                /* return on any other keyword */
                 default:
                     return;
 
@@ -548,6 +466,7 @@ void statement_prime(void) {
  * First set:           FIRST(<statement>) = {AVID_T, SVID_T, IF, USING, INPUT, OUTPUT}
  **********************************************************************/
 void statement(void) {
+
     switch(lookahead.code) {
 
         case AVID_T:
@@ -606,6 +525,7 @@ void assignment_statement(void) {
     assignment_expression();
     match(EOS_T, NO_ATTR);
 	gen_incode("PLATY: Assignment statement parsed");
+
 }
 
 
@@ -713,47 +633,7 @@ void iteration_statement(void) {
 
 }
 
-/***********************************************************************
- * Algorithm:           Step 7.1:
- *                      To implement the Parser, you must use the modified grammar (see Task 1). Before
- *                      writing a function, analyze carefully the production. If the production consists of a single
- *                      production rule (no alternatives), write the corresponding function without using the
- * First set:           FIRST set (see above). You can use the lookahead to verify in advance whether to
- *                      proceed with the production or to call syn_printe() function. If you do so, your output
- *                      might report quite different syntax errors than my parser will reports.
- *                      CST8152 – Compilers – Assignment 4, F15
- *                      Example: The production:
- *                      <input statement> ->
- *                          INPUT (<variable list>);
- *
- *                      MUST be implemented as follows:
- *
- *                      void input_statement(void){
- *                          match(KW_T,INPUT);
- *                          match(LPR_T,NO_ATTR);
- *                          variable_list();
- *                          match(RPR_T,NO_ATTR);
- *                          match(EOS_T,NO_ATTR);
- *                          gen_incode("PLATY: Input statement parsed");
- *                      }
- *
- *                      AND MUST NOT be implemented as shown below:
- *
- *                      void input_statement(void){
- *                          if(lookahead.code == KW_T
- *                          && lookahead. attribute. get_int== INPUT) {
- *                          match(KW_T,INPUT);
- *                          match(LPR_T,NO_ATTR);
- *                          variable_list();
- *                          match(RPR_T,NO_ATTR);
- *                          match(EOS_T,NO_ATTR);
- *                          gen_incode("PLATY: Input statement parsed");
- *                      }else
- *                          syn_printe();
- *                      }
- *                      This implementation will “catch” the syntax error but will prevent the match() function
- *                      from calling the error handler at the right place.
- **********************************************************************/
+
 /***********************************************************************
  * Purpose:             for parsing input statement
  * Author:              King Svillen Ranev of the round table
@@ -935,6 +815,7 @@ void opt_variable_list(void) {
         case SVID_T:
 			variable_list();
 			return;
+
     }
 
     gen_incode("PLATY: Optional variable list parsed");
@@ -1009,20 +890,24 @@ void unary_arithmetic_expression(void) {
     switch(lookahead.code) {
 
 		case ART_OP_T:
-			switch (lookahead.attribute.arr_op)
-			{
+
+			switch (lookahead.attribute.arr_op) {
+
 				case MINUS:
 				case PLUS:
 					match(lookahead.code, lookahead.attribute.arr_op);
 					primary_arithmetic_expression();
 					gen_incode("PLATY: Unary arithmetic expression parsed");
 					break;
+
 				/* print error on anything else */
 				default:
 					syn_printe();
 					return;
+
 			}
 			break;
+
         /* print error on anything else */
         default:
             syn_printe();
@@ -1048,6 +933,7 @@ void additive_arithmetic_expression(void) {
 
     multiplicative_arithmetic_expression();
     additive_arithmetic_expression_prime();
+
 }
 
 
@@ -1080,6 +966,7 @@ void additive_arithmetic_expression_prime(void) {
 				gen_incode("PLATY: Additive arithmetic expression parsed");
 				break;
 
+            /* return on anything else */
             default:
                 return;
 
@@ -1138,9 +1025,8 @@ void multiplicative_arithmetic_expression_prime(void) {
 				gen_incode("PLATY: Multiplicative arithmetic expression parsed");
 				break;
 
-            /* print error on anything else */
+            /* return on anything else */
             default:
-                /*syn_printe();*/
                 return;
 
         }
@@ -1331,6 +1217,7 @@ void logical_OR_expression_prime(void) {
         match(lookahead.code, lookahead.attribute.arr_op);
         logical_AND_expression();
         logical_OR_expression_prime();
+
 		gen_incode("PLATY: Logical OR expression parsed");
 
     }
@@ -1377,6 +1264,7 @@ void logical_AND_expression_prime(void) {
 		match(lookahead.code, lookahead.attribute.arr_op);
 		relational_expression();
 		logical_AND_expression_prime();
+
 		gen_incode("PLATY: Logical AND expression parsed");
 
     }
@@ -1458,6 +1346,7 @@ void primary_a_relational_expression_list(void) {
 			primary_a_relational_expression();
 			break;
 
+        /* print error on anything else */
 		default:
 			syn_printe();
 
@@ -1498,6 +1387,7 @@ void primary_s_relational_expression_list(void) {
             primary_s_relational_expression();
 			break;
 
+        /* print error on anything else */
 		default:
 			syn_printe();
 	}

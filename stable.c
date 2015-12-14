@@ -550,6 +550,7 @@ int st_update_value(STD sym_table, int vid_offset, InitialValue i_value) {
     sym_table.pstvr[vid_offset].i_value = i_value;
 
     return vid_offset;
+
 }
 
 
@@ -636,6 +637,7 @@ static unsigned short set_all_bits_default(unsigned short status_field) {
 
     unsigned short temp_field = set_00(set_0201(status_field, SET_21_00), SET_00_0);
     return temp_field;
+
 }
 
 
@@ -654,6 +656,7 @@ static unsigned short set_0201(unsigned short status_field, unsigned short bitma
     temp_field = temp_field & RESET_0201;
     temp_field = temp_field | bitmask;
     return temp_field;
+
 }
 
 
@@ -672,4 +675,5 @@ static unsigned short set_00(unsigned short status_field, unsigned short bitmask
     temp_field = temp_field & RESET_00;
     temp_field = temp_field | bitmask;
     return temp_field;
+
 }
