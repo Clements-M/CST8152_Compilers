@@ -42,7 +42,7 @@ typedef struct SymbolTableDescriptor {
 /* MASKS*/
 /* 16 bit field  MSB-> 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 <-LSB */
 #define RESET_ALL   0x0000 /* 0000 0000 0000 0000 */
-/*OMFG THESER WERE REVERSED :( */
+/*TODO: THESE MUST BE REVERSED :( */
 #define RESET_0201  0x0001 /* 0000 0000 0000 0001 */
 #define RESET_00    0x0006
 /*NOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
